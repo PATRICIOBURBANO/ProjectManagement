@@ -3,9 +3,8 @@
     public class Notification
     {
 
-        int Id { get; set; }
-
-        bool Status { get; set; }
-
+        public int Id { get; set; }
+        public bool Status { get; set; }
+        public string Content { get; set; }
     }
 }

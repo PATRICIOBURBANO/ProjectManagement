@@ -3,17 +3,15 @@
     public class Project
     {
 
-        int Id { get; set; } 
+        public int Id { get; set; } 
+        public string Name { get; set; }
+        public string Content { get; set; }
+        public int CompletedPercentage { get; set; }
+        public float Budget { get; set; }
+        public DateTime Created { get; set; }
+        public ICollection<Task> Tasks { get; set; }   
 
-        string Name { get; set; }
-
-        int CompletedPercentage { get; set; }   
-        
-        float Budget { get; set; }  
-        
-        ICollection<Task> Tasks { get; set; }   
-
-        public Project ()
+        public Project()
         {
 
             Tasks = new List<Task> ();  
