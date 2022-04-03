@@ -2,21 +2,33 @@
 {
     public class Project
     {
+        public int Id { get; set; }
 
-        int Id { get; set; } 
+        public string Name { get; set; } = null!;
 
-        string Name { get; set; }
+        public int CompletedPercentage { get; set; }
 
-        int CompletedPercentage { get; set; }   
-        
-        float Budget { get; set; }  
-        
-        ICollection<Task> Tasks { get; set; }   
+        public float Budget { get; set; }
 
-        public Project ()
+        public DateTime DateBegin = DateTime.Now;
+
+        public DateTime DateEnd = DateTime.Now;
+
+        public bool IsFinished { get; set; } = false;
+
+        public ICollection<Task> Tasks { get; set; }
+
+        public ICollection<Notification> Notifications { get; set; }
+
+        public ICollection<Project> Projects { get; set; }
+
+
+        public Project()
         {
 
-            Tasks = new List<Task> ();  
+            Tasks = new List<Task>();
+            Notifications = new List<Notification>();
+            Projects = new List<Project>();
 
         }
 

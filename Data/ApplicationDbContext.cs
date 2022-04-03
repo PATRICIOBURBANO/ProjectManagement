@@ -9,5 +9,10 @@ namespace ProjectManagement.Data
             : base(options)
         {
         }
+
+        public DbSet<ProjectManagement.Models.Project> Project { get; set; }
+        public DbSet<ProjectManagement.Models.Task> Task { get; set; }
+        public DbSet<ProjectManagement.Models.Notification> Notification { get; set; }
+
     }
 }
