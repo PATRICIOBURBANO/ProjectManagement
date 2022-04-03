@@ -2,64 +2,69 @@
 using Microsoft.EntityFrameworkCore;
 using ProjectManagement.Data;
 
+
 namespace ProjectManagement.Models
+
 {
 
-        public class SeedData
+    public class SeedData
+    {
+
+        public async static Task Initialize(IServiceProvider serviceProvider)
         {
+            var context = new ApplicationDbContext(serviceProvider.GetRequiredService<DbContextOptions<ApplicationDbContext>>());
 
-            public async static Task Initialize(IServiceProvider serviceProvider)
+            var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+
+            var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+
+
+            if (!context.Project.Any())
             {
-                var context = new ApplicationDbContext(serviceProvider.GetRequiredService<DbContextOptions<ApplicationDbContext>>());
 
-                var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-
-                var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-
-
-                if (!context.Project.Any())
-                {
-
-                    List<Project> newProject = new List<Project>()
-                {
-                new Project {Name = "My first Project",
-                              DateBegin = DateTime.Now,
-                              DateEnd = DateTime.Now,
-                              Budget = 90000,
-                              },
-                new Project { Name = "My second Project",
-                              DateBegin = DateTime.Now,
-                              DateEnd = DateTime.Now,
-                              Budget = 5000,
-                },
-                new Project {Name = "My Third Project",
-                              DateBegin = DateTime.Now,
-                              DateEnd = DateTime.Now,
-                              Budget = 10000,
-                },
-                };
-
-                    context.Project.AddRange(newProject);
-                }
-
-                if (!context.Roles.Any())
-                {
-                    List<string> newRoles = new List<string>()
+                List<Project> newProject = new List<Project>()
             {
-            "Manager",
-            "Developer",
-          
-
+            new Project { Name = "My first Project",
+                          Content ="This a sample of my fist prject content",
+                          DateBegin = DateTime.Now,
+                          DateEnd = DateTime.Now,
+                          Budget = 90000,
+                          },
+            new Project { Name = "My second Project",
+                          Content ="This a sample of my fist prject content",
+                          DateBegin = DateTime.Now,
+                          DateEnd = DateTime.Now,
+                          Budget = 5000,
+            },
+            new Project {Name = "My Third Project",
+                          Content ="This a sample of my fist prject content",
+                          DateBegin = DateTime.Now,
+                          DateEnd = DateTime.Now,
+                          Budget = 10000,
+            },
             };
-                    foreach (string role in newRoles)
-                    {
-                        await roleManager.CreateAsync(new IdentityRole(role));
-                    }
 
+                context.Project.AddRange(newProject);
+            }
+
+            if (!context.Roles.Any())
+            {
+                List<string> newRoles = new List<string>()
+        {
+        "Manager",
+        "Developer",
+
+
+        };
+                foreach (string role in newRoles)
+                {
+                    await roleManager.CreateAsync(new IdentityRole(role));
                 }
 
-                if (!context.Users.Any())
-                {
+            }
+
+            if (!context.Users.Any())
+            {
                 var passwordHasher = new PasswordHasher<ApplicationUser>();
                 ApplicationUser admin1 = new ApplicationUser
                 {
@@ -130,8 +135,12 @@ namespace ProjectManagement.Models
             }
 
 
-            await context.SaveChangesAsync();
-            }
+            context.SaveChanges();
         }
-
     }
+}
+
+
+
+
+

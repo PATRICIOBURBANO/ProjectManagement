@@ -8,7 +8,7 @@ using System.Diagnostics;
 namespace ProjectManagement.Controllers
 {
   
-        [Authorize]
+      
         public class HomeController : Controller
         {
 
@@ -25,7 +25,7 @@ namespace ProjectManagement.Controllers
                 _db = context;
 
             }
-        [AllowAnonymous]
+       
         public IActionResult Index()
         {
             return View();
