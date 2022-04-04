@@ -47,7 +47,7 @@ namespace ProjectManagement.Controllers
             {
                 ApplicationUser user = _db.Users.First(u => u.Email == userName);
 
-                if(user != null)
+                if (user != null)
                 {
                     Project newProject = new Project
                     {
@@ -59,13 +59,33 @@ namespace ProjectManagement.Controllers
                         User = user,
                         UserId = user.Id
                     };
+                    _db.Project.Add(newProject);
+                    _db.SaveChanges();
                 }
-            }
+                return View();
             catch (Exception ex)
             {
                 return NotFound(ex.Message);
             }
-            return View();
+            return RedirectToAction("AllProjects","Home");
+        }
+    }
+}
+        }
+
+        // POST: ProjectController/Delete/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Delete(int id, IFormCollection collection)
+        {
+            try
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            catch
+            {
+                return View();
+            }
         }
     }
 }

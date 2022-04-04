@@ -10,5 +10,16 @@
         public DateTime DateBegin { get; set; }
         public DateTime? DateEnd { get; set; }
         public bool IsFinished { get; set; } = false;
+        public int CompletedPercentage { get; set; }
+
+        public Priority TaskPriority { get; set; }
+
+    
+    }
+    public enum Priority
+    {
+        High,
+        Medium,
+        Low
     }
 }
