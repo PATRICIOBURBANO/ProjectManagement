@@ -1,0 +1,91 @@
+﻿@model IEnumerable<ProjectManagement.Models.Project>
+
+@{
+    ViewData["Title"] = "TaskProjects";
+
+}
+
+@foreach (var a in Model)
+{
+
+
+    <h5>Title</h5>
+    <p>
+        @a.Name
+    </p>
+    <h4>Project </h4>
+    <p>
+        @a.Content
+ 
+    </p>
+    <p>
+        <a asp-controller="Home" asp-action="NewTask" method="post">Add new Task to This Project</a>
+    </p>
+   
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Description Task
+                </th>
+                <th>
+                    Date
+                </th>
+                <th>
+                    User
+                </th>
+                <th>
+                    Percentage Completed
+                </th>
+                <th>
+                    Priority
+                </th>
+              
+                <th>
+                    Select 1
+                </th>
+                 <th>
+                    Select 2
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in a.Tasks)
+            {
+                <tr>
+                    <td>
+                        @item.Title
+                    </td>
+                    <td>
+                        @item.Content
+                    </td>
+                    <td>
+                        @item.DateBegin
+                    </td>
+                    <td>
+                        @item.DateEnd
+                    </td>
+                    <td>
+                        @if(@item.IsFinished)
+                        {
+                            <button type="submit" asp-action="" method="post" asp-route-taskId="@item.Id">✌️</button>
+                        }
+                        
+                    </td>
+                   
+                    <td>
+                        <a asp-controller="Home" type="submit" asp-action="GetVoteUp" method="post" asp-route-questionId="@a.Id" asp-route-answerId="@item.Id">👍</a>
+                        <a asp-controller="Home" type="submit" asp-action="GetVoteDown" method="post" asp-route-questionId="@a.Id" asp-route-answerId="@item.Id">👎</a>
+                    </td>
+                    <td>
+                        <a asp-controller="Home" type="submit" asp-action="MostCorrectAnswer" method="post" asp-route-questionId="@a.Id" asp-route-answerId="@item.Id" >✌️</a>
+                    </td>
+                </tr>
+            }
+
+
+        </tbody>
+    </table>
+}
+<p>
+    <a asp-controller="Home" asp-action="Index">Back home</a>
