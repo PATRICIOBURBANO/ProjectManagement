@@ -7,9 +7,13 @@
 <h1>Manage all Projects </h1>
 
 <p>
-    <a asp-action="NewProject">Create a New Project</a>
-    <a asp-action="AllUsers">See a list all Users</a>
+    <a a style="text-decoration:none" asp-controller="Project" asp-action="AddProject">Create a New Project</a>
+  
 </p>
+<p>
+      <a style="text-decoration:none" asp-action="AllUsers">See a list all Users</a>
+</p>
+
 <table class="table">
     <thead>
         <tr>
@@ -29,7 +33,7 @@
                  @Html.DisplayNameFor(model => model.Budget)
             </th
             <th>
-               @Html.DisplayNameFor(model => model.Budget)
+           
             </th
             <th>
             </th>
@@ -55,13 +59,13 @@
                  @Html.DisplayFor(modelItem => item.Budget)
                 </td>
                 <td>
-                  @Html.DisplayFor(modelItem => item.IsFinished)
+           
                 </td>
                  <td>
                 </td>
 
                 <td>
-                    <a asp-action="TasksProject" asp-route-projectId="@item.Id">Tasks</a>
+                    <a style="text-decoration:none" asp-action="TasksProject" asp-route-projectId="@item.Id">Tasks</a>
                 </td>
             </tr>
         }
