@@ -1,13 +1,27 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using ProjectManagement.Data;
+using ProjectManagement.Models;
 
 namespace ProjectManagement.Controllers
 {
     public class ProjectController : Controller
     {
+        private ApplicationDbContext _db;
+        private UserManager<ApplicationUser> _userManager;
+        private RoleManager<IdentityRole> _roleManager;
+
+        public ProjectController(ApplicationDbContext Db, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
+        {
+            _db = Db;
+            _userManager = userManager;
+            _roleManager = roleManager;
+        }
         // GET: ProjectController
         public ActionResult Index()
         {
+
             return View();
         }
 
@@ -17,67 +31,41 @@ namespace ProjectManagement.Controllers
             return View();
         }
 
-        // GET: ProjectController/Create
-        public ActionResult Create()
+        // GET: ProjectController/AddProject
+        public IActionResult AddProject()
         {
             return View();
         }
 
-        // POST: ProjectController/Create
+        // POST: ProjectController/AddProject
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public IActionResult AddProject(string name, string content, int budget)
         {
+            string userName = User.Identity.Name;
+
             try
             {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
+                ApplicationUser user = _db.Users.First(u => u.Email == userName);
 
-        // GET: ProjectController/Edit/5
-        public ActionResult Edit(int id)
-        {
+                if(user != null)
+                {
+                    Project newProject = new Project
+                    {
+                        Name = name,
+                        Content = content,
+                        Budget = budget,
+                        CompletedPercentage = 0,
+                        DateBegin = DateTime.Now,
+                        User = user,
+                        UserId = user.Id
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
             return View();
-        }
-
-        // POST: ProjectController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: ProjectController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: ProjectController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
         }
     }
 }
