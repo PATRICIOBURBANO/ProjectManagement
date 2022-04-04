@@ -62,30 +62,48 @@ namespace ProjectManagement.Controllers
                     _db.Project.Add(newProject);
                     _db.SaveChanges();
                 }
-                return View();
+            }
             catch (Exception ex)
             {
                 return NotFound(ex.Message);
             }
             return RedirectToAction("AllProjects","Home");
         }
-    }
-}
+        
+        public IActionResult AddTask()
+        {
+            
+            return View();
         }
 
-        // POST: ProjectController/Delete/5
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public IActionResult AddTask(string title, string content, int projectId, int priorityValue)
         {
+            string userName = User.Identity.Name;
+
             try
             {
-                return RedirectToAction(nameof(Index));
+                ApplicationUser user = _db.Users.First(u => u.Email == userName);
+                Project project = _db.Project.First(p => p.Id == projectId);
+
+                if(user != null)
+                {
+                    TaskProject newTask = new TaskProject
+                    {
+                        Title = title,
+                        Content = content,
+                        Project = project,
+                        ProjectId = project.Id,
+                        DateBegin = DateTime.Now,
+                        TaskPriority = (Priority)priorityValue
+                    };
+                }
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                return NotFound(ex.Message);
             }
+            return View();
         }
     }
 }
