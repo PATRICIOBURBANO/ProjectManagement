@@ -34,12 +34,13 @@ namespace ProjectManagement.Controllers
         // GET: ProjectController/AddProject
         public IActionResult AddProject()
         {
+           
             return View();
         }
 
         // POST: ProjectController/AddProject
         [HttpPost]
-        public IActionResult AddProject(string name, string content, int budget)
+        public IActionResult AddProject(string name, string content, int budget, PriorityP priority)
         {
             string userName = User.Identity.Name;
 
@@ -57,7 +58,9 @@ namespace ProjectManagement.Controllers
                         CompletedPercentage = 0,
                         DateBegin = DateTime.Now,
                         User = user,
-                        UserId = user.Id
+                        UserId = user.Id,
+                        ProjectPriority = priority
+                        
                     };
                     _db.Project.Add(newProject);
                     _db.SaveChanges();
@@ -69,5 +72,7 @@ namespace ProjectManagement.Controllers
             }
             return RedirectToAction("AllProjects","Home");
         }
+
+     
     }
 }
