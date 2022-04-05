@@ -102,6 +102,7 @@ namespace ProjectManagement.Controllers
         public IActionResult TasksProject(int projectId)
         {
             var tasksList = _db.Project.Where(b => b.Id == projectId).Include(c => c.Tasks).ToList();
+            var project = _db.Project.Include(c => c.Tasks).First(p => p.Id == projectId);
             return View(tasksList);
 
         }

@@ -70,21 +70,21 @@ namespace ProjectManagement.Controllers
             return RedirectToAction("AllProjects","Home");
         }
         
-        public IActionResult AddTask()
+        public IActionResult AddTask(int projectId)
         {
-            
+            ViewBag.ProjectId = projectId;
             return View();
         }
 
         [HttpPost]
-        public IActionResult AddTask(string title, string content, int projectId, int priorityValue)
+        public IActionResult AddTask(string title, string content, int priorityValue)
         {
             string userName = User.Identity.Name;
 
             try
             {
                 ApplicationUser user = _db.Users.First(u => u.Email == userName);
-                Project project = _db.Project.First(p => p.Id == projectId);
+                //Project project = _db.Project.First(p => p.Id == projectId);
 
                 if(user != null)
                 {
@@ -92,11 +92,13 @@ namespace ProjectManagement.Controllers
                     {
                         Title = title,
                         Content = content,
-                        Project = project,
-                        ProjectId = project.Id,
+                        //Project = project,
+                        //ProjectId = project.Id,
                         DateBegin = DateTime.Now,
                         TaskPriority = (Priority)priorityValue
                     };
+                    _db.Task.Add(newTask);
+                    _db.SaveChanges();
                 }
             }
             catch (Exception ex)

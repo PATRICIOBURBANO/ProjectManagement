@@ -15,7 +15,7 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Title" class="control-label"></label>
-                <input asp-for="Title" name="" class="form-control" />
+                <input asp-for="Title" name="title" class="form-control" />
                 <span asp-validation-for="Title" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -53,8 +53,6 @@
                 <select asp-for="TaskPriority" asp-items="Html.GetEnumSelectList<Priority>()" name="priorityValue">
                     <option value="">Choose the Priority</option>
                 </select>
-                <input asp-for="TaskPriority" class="form-control" />
-                <span asp-validation-for="TaskPriority" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
