@@ -19,7 +19,8 @@
             </div>
             <div class="form-group">
                 <label asp-for="Content" class="control-label"></label>
-                <input type="text" name="content" asp-for="Content" class="form-control" />
+                <textarea type="text" name="content" asp-for="Content" class="form-control">
+                </textarea>
                 <span asp-validation-for="Content" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -27,8 +28,14 @@
                 <input type="number" name="Budget" asp-for="Budget" class="form-control" />
                 <span asp-validation-for="Budget" class="text-danger"></span>
             </div>
+            <div>
+                <select name="priority" asp-items="Html.GetEnumSelectList<PriorityP>()">Priority Project</select>
+            </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+            <div>
+
             </div>
         </form>
     </div>

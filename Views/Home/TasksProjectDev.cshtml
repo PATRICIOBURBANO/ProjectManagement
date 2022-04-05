@@ -1,25 +1,27 @@
-﻿@*@model Project
+﻿@model IEnumerable<ProjectManagement.Models.Project>
 
 @{
-    ViewData["Title"] = "TaskProjects";
+    ViewData["Title"] = "TaskProjectsDeveloper";
 
 }
 
+@foreach (var a in Model)
+{
+
+
     <h5>Title</h5>
     <p>
-        @Model.Name
+        @a.Name
     </p>
     <h4>Project </h4>
     <p>
-        @Model.Content
+        @a.Content
  
     </p>
     <p>
-        <a asp-controller="Project" asp-action="AddTask" asp-route-projectId="@Model.Id">Add New Task to This Project</a>
+        <a asp-controller="Home" asp-action="NewTask" method="post">Add new Task to This Project</a>
     </p>
    
-@foreach (var a in Model.Tasks)
-{
     <table class="table">
         <thead>
             <tr>
@@ -48,7 +50,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in a)
+            @foreach (var item in a.Tasks)
             {
                 <tr>
                     <td>
@@ -87,4 +89,4 @@
 }
     <p>
     <a asp-controller="Home" asp-action="Index">Back home</a>
-    </p>*@
+    </p>

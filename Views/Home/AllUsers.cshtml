@@ -11,10 +11,12 @@
 @if (Model != null)
 {
     <ul>
-        @foreach (var u in Model)
+        @foreach (var a in Model)
         {
             <li>
-                @u.Email
+                @a.Email
+                @a.Id
+
             </li>
         }
     </ul>

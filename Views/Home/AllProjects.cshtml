@@ -31,11 +31,17 @@
             </th> 
             <th>
                  @Html.DisplayNameFor(model => model.Budget)
-            </th
+            </th>
             <th>
-           
-            </th
+                 @Html.DisplayNameFor(model => model.ProjectPriority)
+            </th>
             <th>
+            </th>
+             <th>
+            </th>
+             <th>
+            </th>
+             <th>
             </th>
         </tr>
     </thead>
@@ -58,12 +64,19 @@
                 <td>
                  @Html.DisplayFor(modelItem => item.Budget)
                 </td>
+                 <td>
+                 @Html.DisplayFor(modelItem => item.ProjectPriority)
+                </td>
                 <td>
-           
                 </td>
                  <td>
                 </td>
-
+                <td>
+                    <a asp-action="UpdateProject" asp-route-projectId="@item.Id">Update </a>
+                </td>
+                <td>
+                    <a asp-action="DeleteProject" asp-route-projectId="@item.Id">Delete</a>
+                </td>
                 <td>
                     <a style="text-decoration:none" asp-action="TasksProject" asp-route-projectId="@item.Id">Tasks</a>
                 </td>
