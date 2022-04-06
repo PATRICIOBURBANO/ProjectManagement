@@ -1,4 +1,4 @@
-﻿@*@model Project
+﻿@model Project
 
 @{
     ViewData["Title"] = "TaskProjects";
@@ -18,8 +18,6 @@
         <a asp-controller="Project" asp-action="AddTask" asp-route-projectId="@Model.Id">Add New Task to This Project</a>
     </p>
    
-@foreach (var a in Model.Tasks)
-{
     <table class="table">
         <thead>
             <tr>
@@ -48,7 +46,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in a)
+            @foreach (var item in @Model.Tasks)
             {
                 <tr>
                     <td>
@@ -71,20 +69,18 @@
                         
                     </td>
                    
-                    <td>
-                        <input type="submit" asp-controller="Home" type="submit" asp-action="" method="post" asp-route-taskId="@a.Id" asp-route-answerId="@item.Id">
+@*                    <td>
+                        <input type="submit" asp-controller="Home" type="submit" asp-action="" method="post" asp-route-taskId="@item.Id" asp-route-answerId="@item.Id">
                        
                     </td>
                     <td>
                         <a asp-controller="Home" type="submit" asp-action="FinishedTask" method="post" asp-route-taskId="@a.Id" asp-route-answerId="@item.Id" >⏳</a>
-                    </td>
+                    </td>*@
                 </tr>
             }
-
-
         </tbody>
     </table>
-}
+
     <p>
     <a asp-controller="Home" asp-action="Index">Back home</a>
-    </p>*@
+    </p>
