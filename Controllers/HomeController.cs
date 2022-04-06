@@ -32,45 +32,7 @@ namespace ProjectManagement.Controllers
             return View();
         }
 
-        //public IActionResult NewTask(int projectId)
-        //{
-
-        //    ViewBag.ProjectId = projectId;
-        //    return View();
-        //}
-
-        //[HttpPost]
-        //public IActionResult NewTask(int projectId, string title, string content)
-        //{
-        //    string userName = User.Identity.Name;
-
-        //    try
-        //    {
-        //        ApplicationUser user = _db.Users.First(u => u.Email == userName);
-        //        if (user != null)
-        //        {
-        //            TaskProject newTask = new TaskProject
-        //            {
-
-        //                ProjectId = projectId,
-        //                Title = title,
-        //                Content = content,
-        //                DateBegin = DateTime.Now,
-        //                DateEnd = DateTime.Now,
-
-
-        //            };
-        //            _db.Task.Add(newTask);
-        //            _db.SaveChanges();
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return NotFound(ex.Message);
-        //    }
-
-        //    return RedirectToAction("ProjectTasks", new { questionId = projectId });
-        //}
+      
 
         [Authorize(Roles = "Manager")]
         public IActionResult AllProjects()
@@ -79,26 +41,7 @@ namespace ProjectManagement.Controllers
 
             return View(allProjects);
         }
-        ////[Authorize(Roles = "Manager")]
-        //public IActionResult DeleteProject(int projectId)
-        //{
-        //    Project projectSelected = _db.Project.First(a => a.Id == projectId);
-        //    var tasks = _db.Task.ToList();
-        //    var tasksRelated = _db.Task.Where(a => a.ProjectId == projectId).ToList();
-
-        //    if (tasksRelated != null)
-        //    {
-        //        _db.Project.Remove(projectSelected);
-        //        _db.SaveChanges();
-        //    }
-        //    return RedirectToAction("AllProjects");
-
-
-
-
-        //    return RedirectToAction("ProjectTasks", new { projectId = projectId });
-        //}
-
+        
         [Authorize(Roles = "Manager")]
         public IActionResult TasksProject(int projectId)
         {

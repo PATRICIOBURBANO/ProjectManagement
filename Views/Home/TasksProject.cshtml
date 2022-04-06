@@ -83,18 +83,18 @@
 
                     </td>
                    
-@*                    <td>
+                     <td>
                         <input type="submit" asp-controller="Home" type="submit" asp-action="" method="post" asp-route-taskId="@item.Id" asp-route-answerId="@item.Id">
                        
                     </td>
                     <td>
-                        <a asp-controller="Home" type="submit" asp-action="FinishedTask" method="post" asp-route-taskId="@a.Id" asp-route-answerId="@item.Id" >⏳</a>
-                    </td>*@
+                        <input asp-controller="Home" type="submit" asp-action="FinishedTask" method="post" asp-route-taskId="@item.Id" asp-route-answerId="@item.Id" >⏳<input>
+                    </td>
                 </tr>
             }
         </tbody>
     </table>
 
     <p>
-    <a asp-controller="Home" asp-action="Index">Back home</a>
+    <a asp-controller="Home" asp-action="AllProjects">Back to List</a>
     </p>

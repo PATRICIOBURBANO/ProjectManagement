@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using ProjectManagement.Data;
 using ProjectManagement.Models;
 
@@ -91,6 +92,56 @@ namespace ProjectManagement.Controllers
             }
             return RedirectToAction("AllProjects", "Home");
         }
+        public async Task<IActionResult> UpdateProject(int? projectId)
+        {
+            if (projectId == null)
+            {
+                return NotFound();
+            }
+
+            var project = await _db.Project.FindAsync(projectId);
+            if (project == null)
+            {
+                return NotFound();
+            }
+            return View(project);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdateProject(int projectId, [Bind("Name,Content,CompletedPercentage,Budget,DateEnd")] Project project)
+        {
+            if (projectId != project.Id)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _db.Update(project);
+                    await _db.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!ProjectExists(project.Id))
+                    {
+                        return NotFound();
+                    }
+                   
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            return View(project);
+        }
+        private bool ProjectExists(int projectId)
+        {
+            return _db.Project.Any(e => e.Id == projectId);
+        }
+
+
+
 
         public IActionResult AddTask(int projectId)
         {
@@ -134,7 +185,8 @@ namespace ProjectManagement.Controllers
             {
                 return NotFound(ex.Message);
             }
-            return RedirectToAction("AllProjects", "Home");
+            // redirect to tasksProject new projectId
+            return RedirectToAction("TasksProject", "Home", new { projectId = projectId });
         }
 
         public IActionResult DeleteTask(int taskId)
