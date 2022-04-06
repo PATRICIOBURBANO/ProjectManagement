@@ -16,35 +16,40 @@
     <h4>Project </h4>
     <p>
         @a.Content
- 
+
     </p>
     <p>
-        <a asp-controller="Home" asp-action="NewTask" method="post">Add new Task to This Project</a>
+        <a asp-controller="Project" asp-action="AddTask" asp-route-projectId="@a.Id" method="post">Add new Task to This Project</a>
     </p>
-   
+
     <table class="table">
         <thead>
             <tr>
+                  <th>
+                    Title
+                </th>
                 <th>
                     Description Task
                 </th>
                 <th>
-                    Date
+                    Date Begin
                 </th>
                 <th>
-                    User
+                    Deadline
                 </th>
                 <th>
-                    Percentage Completed
+                    User Assigned
+                </th>
+                <th>
+                   % Completed
                 </th>
                 <th>
                     Priority
                 </th>
-              
                 <th>
-                    Select 1
+                    It is a Task Finished
                 </th>
-                 <th>
+                <th>
                     Select 2
                 </th>
             </tr>
@@ -65,20 +70,38 @@
                     <td>
                         @item.DateEnd
                     </td>
+                     <td>
+                        @item.User
+                    </td>
+                     <td>
+                        @item.CompletedPercentage 
+                    </td>
+                     <td>
+                        @item.TaskPriority
+                    </td>
                     <td>
-                        @if(@item.IsFinished)
+                        @if (@item.IsFinished)
                         {
                             <button type="submit" asp-action="" method="post" asp-route-taskId="@item.Id">✌️</button>
                         }
-                        
+
                     </td>
-                   
+                    <td>
+                        <a asp-controller="Project" asp-action="UpdateTask" asp-route-taskId="@item.Id">Update</a>
+                    </td>
+                    <td>
+                        <a asp-controller="Project" asp-action="DeleteTask" asp-route-taskId="@item.Id">Delete</a>
+                    </td>
+                    <td>
+                        <a style="text-decoration:none" asp-action="TasksProject" asp-route-projectId="@item.Id">Tasks</a>
+                    </td>
+
                     <td>
                         <input type="submit" asp-controller="Home" type="submit" asp-action="" method="post" asp-route-taskId="@a.Id" asp-route-answerId="@item.Id">
-                       
+
                     </td>
                     <td>
-                        <a asp-controller="Home" type="submit" asp-action="FinishedTask" method="post" asp-route-taskId="@a.Id" asp-route-answerId="@item.Id" >⏳</a>
+                        <a asp-controller="Home" type="submit" asp-action="FinishedTask" method="post" asp-route-taskId="@a.Id" asp-route-answerId="@item.Id">⏳</a>
                     </td>
                 </tr>
             }
@@ -87,6 +110,6 @@
         </tbody>
     </table>
 }
-    <p>
-    <a asp-controller="Home" asp-action="Index">Back home</a>
-    </p>
+<p>
+    <a asp-controller="Home" asp-action="AllProjects">Back to list</a>
+</p>

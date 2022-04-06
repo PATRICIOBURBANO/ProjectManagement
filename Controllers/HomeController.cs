@@ -57,8 +57,8 @@ namespace ProjectManagement.Controllers
         //                Content = content,
         //                DateBegin = DateTime.Now,
         //                DateEnd = DateTime.Now,
-                        
-                        
+
+
         //            };
         //            _db.Task.Add(newTask);
         //            _db.SaveChanges();
@@ -72,13 +72,13 @@ namespace ProjectManagement.Controllers
         //    return RedirectToAction("ProjectTasks", new { questionId = projectId });
         //}
 
-        //[Authorize(Roles = "Manager")]
-        //public IActionResult AllProjects()
-        //{
-        //    var allProjects = _db.Project.ToList();
+        [Authorize(Roles = "Manager")]
+        public IActionResult AllProjects()
+        {
+            var allProjects = _db.Project.ToList();
 
-        //    return View(allProjects);
-        //}
+            return View(allProjects);
+        }
         ////[Authorize(Roles = "Manager")]
         //public IActionResult DeleteProject(int projectId)
         //{
@@ -108,15 +108,15 @@ namespace ProjectManagement.Controllers
         }
 
 
-        [Authorize(Roles = "Developer")]
-        public IActionResult TasksProjectDev()
-        {
-            string userName = User.Identity.Name;
-            ApplicationUser user = _db.Users.First(u => u.Email == userName);
-            var tasksList = _db.Project.Include(c => c.Tasks).Where(d => d.User == user).ToList();
-            return View(tasksList);
+        //[Authorize(Roles = "Developer")]
+        //public IActionResult TasksProjectDev()
+        //{
+        //    string userName = User.Identity.Name;
+        //    ApplicationUser user = _db.Users.First(u => u.Email == userName);
+        //    var tasksList = _db.Project.Include(c => c.Tasks).Where(d => d.User == user).ToList();
+        //    return View(tasksList);
 
-        }
+        //}
 
 
         //public IActionResult AllProjectByPriority(string taskPriority)    

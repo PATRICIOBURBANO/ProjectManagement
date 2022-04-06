@@ -15,7 +15,7 @@
         public virtual ICollection<TaskProject> Tasks { get; set; }
         public virtual ICollection<Notification> Notifications { get; set; }
         public virtual ICollection<Project> Projects { get; set; }
-        public PriorityP ProjectPriority { get; set; } 
+        public PriorityP ProjectPriority { get; set; }
 
         public Project()
         {
