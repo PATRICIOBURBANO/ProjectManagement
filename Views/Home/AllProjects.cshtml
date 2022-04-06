@@ -18,31 +18,30 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Name)
+                Title
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Content)
+                Description Project
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.DateBegin)
+                Date Start
             </th>
             <th>
-               @Html.DisplayNameFor(model => model.DateEnd)
+               Deadline
             </th> 
             <th>
-                 @Html.DisplayNameFor(model => model.Budget)
+                 $@Html.DisplayNameFor(model => model.Budget)
             </th>
             <th>
-                 @Html.DisplayNameFor(model => model.ProjectPriority)
-            </th>
-            <th>
-            </th>
+                 Priority
+            </th>   
              <th>
             </th>
              <th>
+                Actions
             </th>
-             <th>
-            </th>
+             <th>   
+             </th>
         </tr>
     </thead>
     <tbody>
@@ -67,18 +66,15 @@
                  <td>
                  @Html.DisplayFor(modelItem => item.ProjectPriority)
                 </td>
+               
                 <td>
-                </td>
-                 <td>
-                </td>
-                <td>
-                    <a asp-action="UpdateProject" asp-route-projectId="@item.Id">Update </a>
+                    <a style="text-decoration:none" asp-controller="Project" asp-action="UpdateProject" asp-route-projectId="@item.Id">Update </a>
                 </td>
                 <td>
-                    <a asp-controller="Project" asp-action="DeleteProject" asp-route-projectId="@item.Id">Delete</a>
+                    <a style="text-decoration:none" asp-controller="Project" asp-action="DeleteProject" asp-route-projectId="@item.Id">Delete</a>
                 </td>
                 <td>
-                    <a style="text-decoration:none" asp-controller="Home" asp-action="TasksProject" asp-route-projectId="@item.Id">Tasks</a>
+                    <a style="text-decoration:none" asp-action="TasksProject" asp-route-projectId="@item.Id">Tasks List</a>
                 </td>
             </tr>
         }

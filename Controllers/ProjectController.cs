@@ -61,6 +61,7 @@ namespace ProjectManagement.Controllers
                         User = user,
                         UserId = user.Id,
                         ProjectPriority = priority
+                        
                     };
                     _db.Project.Add(newProject);
                     _db.SaveChanges();
@@ -90,7 +91,7 @@ namespace ProjectManagement.Controllers
             }
             return RedirectToAction("AllProjects", "Home");
         }
-        
+
         public IActionResult AddTask(int projectId)
         {
             ViewBag.ProjectId = projectId;
@@ -147,11 +148,12 @@ namespace ProjectManagement.Controllers
                     _db.SaveChanges();
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return NotFound(ex.Message);
             }
             return RedirectToAction("AllProjects", "Home");
         }
+
     }
 }

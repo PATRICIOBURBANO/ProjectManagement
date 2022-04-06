@@ -17,30 +17,35 @@
     <p>
         <a asp-controller="Project" asp-action="AddTask" asp-route-projectId="@Model.Id">Add New Task to This Project</a>
     </p>
-   
+
     <table class="table">
         <thead>
             <tr>
+                  <th>
+                    Title
+                </th>
                 <th>
                     Description Task
                 </th>
                 <th>
-                    Date
+                    Date Begin
                 </th>
                 <th>
-                    User
+                    Deadline
                 </th>
                 <th>
-                    Percentage Completed
+                    User Assigned
+                </th>
+                <th>
+                   % Completed
                 </th>
                 <th>
                     Priority
                 </th>
-              
                 <th>
-                    Select 1
+                    It is a Task Finished
                 </th>
-                 <th>
+                <th>
                     Select 2
                 </th>
             </tr>
@@ -61,12 +66,21 @@
                     <td>
                         @item.DateEnd
                     </td>
+                     <td>
+                        @item.User
+                    </td>
+                     <td>
+                        @item.CompletedPercentage 
+                    </td>
+                     <td>
+                        @item.TaskPriority
+                    </td>
                     <td>
-                        @if(@item.IsFinished)
+                        @if (@item.IsFinished)
                         {
                             <button type="submit" asp-action="" method="post" asp-route-taskId="@item.Id">✌️</button>
                         }
-                        
+
                     </td>
                    
 @*                    <td>
