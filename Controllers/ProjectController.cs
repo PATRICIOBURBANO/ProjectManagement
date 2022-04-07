@@ -61,6 +61,7 @@ namespace ProjectManagement.Controllers
                         DateBegin = DateTime.Now,
                         User = user,
                         UserId = user.Id,
+                        UserName = userName,
                         ProjectPriority = priority
                         
                     };
@@ -109,7 +110,7 @@ namespace ProjectManagement.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdateProject(int projectId, [Bind("Name,Content,CompletedPercentage,Budget,DateEnd")] Project project)
+        public async Task<IActionResult> UpdateProject(int projectId, [Bind("Name,Content,CompletedPercentage,Budget, UserId")] Project project)
         {
             if (projectId != project.Id)
             {
@@ -152,7 +153,7 @@ namespace ProjectManagement.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddTask(string title, string content, string userId, Priority priorityValue, int projectId)
+        public IActionResult AddTask(string title, string content, string userId,Priority priorityValue, int projectId)
         {
             string userName = User.Identity.Name;
 
@@ -160,6 +161,7 @@ namespace ProjectManagement.Controllers
             {
                 ApplicationUser user = _db.Users.First(u => u.Email == userName);
                 ApplicationUser assignedUser = _db.Users.First(u => u.Id == userId);
+             
                 Project project = _db.Project.First(p => p.Id == projectId);
 
                 if (user != null)
@@ -169,12 +171,13 @@ namespace ProjectManagement.Controllers
                         Title = title,
                         Content = content,
                         //Project = project,
-                        //ProjectId = project.Id,
+                        //ProjectId = project.Id,, 
                         DateBegin = DateTime.Now,
                         Project = project,
                         ProjectId = project.Id,
                         User = assignedUser,
                         UserId = assignedUser.Id,
+                        UserName = assignedUser.UserName,
                         TaskPriority = priorityValue
                     };
                     _db.Task.Add(newTask);

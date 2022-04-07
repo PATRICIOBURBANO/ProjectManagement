@@ -1,56 +1,54 @@
-﻿@model IEnumerable<ProjectManagement.Models.Project>
+﻿@model Project
 
 @{
-    ViewData["Title"] = "TaskProjectsDeveloper";
+    ViewData["Title"] = "TaskProjectsDev";
 
 }
 
-@foreach (var a in Model)
-{
-
-
     <h5>Title</h5>
     <p>
-        @a.Name
+        @Model.Name
     </p>
     <h4>Project </h4>
     <p>
-        @a.Content
+        @Model.Content
  
     </p>
-    <p>
-        <a asp-controller="Home" asp-action="NewTask" method="post">Add new Task to This Project</a>
-    </p>
-   
+  
     <table class="table">
         <thead>
             <tr>
+                  <th>
+                    Title
+                </th>
                 <th>
                     Description Task
                 </th>
                 <th>
-                    Date
+                    Date Begin
                 </th>
                 <th>
-                    User
+                    Deadline
                 </th>
                 <th>
-                    Percentage Completed
+                    User Assigned
+                </th>
+                <th>
+                   % Completed
                 </th>
                 <th>
                     Priority
                 </th>
-              
                 <th>
-                    Select 1
+                    It is a Task Finished
                 </th>
-                 <th>
+                <th>
                     Select 2
                 </th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in a.Tasks)
+            @foreach (var item in @Model.Tasks)
             {
                 <tr>
                     <td>
@@ -65,28 +63,35 @@
                     <td>
                         @item.DateEnd
                     </td>
+                     <td>
+                        @item.User
+                    </td>
+                     <td>
+                        @item.CompletedPercentage 
+                    </td>
+                     <td>
+                        @item.TaskPriority
+                    </td>
                     <td>
-                        @if(@item.IsFinished)
+                        @if (@item.IsFinished)
                         {
                             <button type="submit" asp-action="" method="post" asp-route-taskId="@item.Id">✌️</button>
                         }
-                        
+
                     </td>
                    
-                    <td>
-                        <input type="submit" asp-controller="Home" type="submit" asp-action="" method="post" asp-route-taskId="@a.Id" asp-route-answerId="@item.Id">
+                     <td>
+                        <input type="submit" asp-controller="Home" type="submit" asp-action="" method="post" asp-route-taskId="@item.Id" asp-route-answerId="@item.Id">
                        
                     </td>
                     <td>
-                        <a asp-controller="Home" type="submit" asp-action="FinishedTask" method="post" asp-route-taskId="@a.Id" asp-route-answerId="@item.Id" >⏳</a>
+                        <input asp-controller="Home" type="submit" asp-action="FinishedTask" method="post" asp-route-taskId="@item.Id" asp-route-answerId="@item.Id" >⏳<input>
                     </td>
                 </tr>
             }
-
-
         </tbody>
     </table>
-}
+
     <p>
-    <a asp-controller="Home" asp-action="Index">Back home</a>
+    <a asp-controller="Home" asp-action="AllProjectsDev">Back to List</a>
     </p>

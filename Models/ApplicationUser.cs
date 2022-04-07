@@ -2,28 +2,32 @@
 
 namespace ProjectManagement.Models
 {
-   
-        public class ApplicationUser : IdentityUser
+
+    public class ApplicationUser : IdentityUser
+    {
+        public virtual ICollection<Project> Projects { get; set; } = null!;
+
+        public virtual ICollection<TaskProject> Tasks { get; set; } = null!;
+
+        public virtual ICollection<Notification> Notifications { get; set; } = null!;
+
+
+
+        public ApplicationUser()
         {
-            public virtual ICollection<Project> Projects { get; set; } = null!;
+            Projects = new HashSet<Project>();
 
-            public virtual ICollection<TaskProject> Tasks { get; set; } = null!;
+            Tasks = new HashSet<TaskProject>();
 
-            public virtual ICollection<Notification> Notifications { get; set; } = null!;
-
-      
-
-            public ApplicationUser()
-            {
-                Projects = new HashSet<Project>();
-
-                Tasks = new HashSet<TaskProject>();
-
-                Notifications = new HashSet<Notification>();
-            }
-
+            Notifications = new HashSet<Notification>();
         }
 
-
+        internal bool IsInRole(string v)
+        {
+            throw new NotImplementedException();
+        }
     }
+
+
+}
 

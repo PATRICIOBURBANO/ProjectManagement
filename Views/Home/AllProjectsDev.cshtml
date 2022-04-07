@@ -1,0 +1,81 @@
+﻿@model IEnumerable<ProjectManagement.Models.Project>
+
+@{
+    ViewData["Title"] = "Developer All Projects";
+}
+
+<h1>Manage all Projects </h1>
+
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Title
+            </th>
+            <th>
+                Description Project
+            </th>
+            <th>
+                Date Start
+            </th>
+            <th>
+               Deadline
+            </th> 
+            <th>
+                 $@Html.DisplayNameFor(model => model.Budget)
+            </th>
+            <th>
+                 Priority
+            </th>   
+             <th>
+            </th>
+             <th>
+                Actions
+            </th>
+             <th>   
+             </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Content)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateBegin)
+                </td>
+                <td>
+                 @Html.DisplayFor(modelItem => item.DateEnd)
+                </td>
+                <td>
+                 @Html.DisplayFor(modelItem => item.Budget)
+                </td>
+                 <td>
+                 @Html.DisplayFor(modelItem => item.ProjectPriority)
+                </td>
+               
+                <td>
+                    <a style="text-decoration:none" asp-controller="Project" asp-action="UpdateAdvance" asp-route-projectId="@item.Id">Update Advance </a>
+                </td>
+                
+                <td>
+                    <a style="text-decoration:none" asp-action="TasksProjectDev" asp-route-projectId="@item.Id">Tasks List</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<p>
+    <a asp-controller="Home" asp-action="Index">Back home</a>
+</p>
+
+
+

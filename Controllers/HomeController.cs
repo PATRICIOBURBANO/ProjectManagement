@@ -5,34 +5,35 @@ using Microsoft.EntityFrameworkCore;
 using ProjectManagement.Data;
 using ProjectManagement.Models;
 using System.Diagnostics;
+using System.Security.Claims;
 
 namespace ProjectManagement.Controllers
 {
-  
-      
-        public class HomeController : Controller
+
+
+    public class HomeController : Controller
+    {
+
+        private readonly ILogger<HomeController> _logger;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly ApplicationDbContext _db;
+
+        public HomeController(ILogger<HomeController> logger, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, ApplicationDbContext context)
         {
+            _logger = logger;
+            _userManager = userManager;
+            _roleManager = roleManager;
+            _db = context;
 
-            private readonly ILogger<HomeController> _logger;
-            private readonly UserManager<ApplicationUser> _userManager;
-            private readonly RoleManager<IdentityRole> _roleManager;
-            private readonly ApplicationDbContext _db;
+        }
 
-            public HomeController(ILogger<HomeController> logger, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, ApplicationDbContext context)
-            {
-                _logger = logger;
-                _userManager = userManager;
-                _roleManager = roleManager;
-                _db = context;
-
-            }
-       
         public IActionResult Index()
         {
             return View();
         }
 
-      
+
 
         [Authorize(Roles = "Manager")]
         public IActionResult AllProjects()
@@ -41,7 +42,7 @@ namespace ProjectManagement.Controllers
 
             return View(allProjects);
         }
-        
+
         [Authorize(Roles = "Manager")]
         public IActionResult TasksProject(int projectId)
         {
@@ -51,16 +52,56 @@ namespace ProjectManagement.Controllers
         }
 
 
+
+
+        [Authorize(Roles = "Developer")]
+        public IActionResult AllProjectsDev()
+        {
+
+
+            string userLogged = User.Identity.Name;
+
+            var allProjects = _db.Project.Include(a => a.Tasks).Where(b => b.UserName == userLogged).ToList();
+
+
+            return View(allProjects);
+        }
+
+
+
         [Authorize(Roles = "Developer")]
         public IActionResult TasksProjectDev()
         {
+
+            return View();
+        }
+        [HttpPost]
+        public IActionResult TasksProjectDev(int projectId)
+        {
+
             string userName = User.Identity.Name;
-            ApplicationUser user = _db.Users.First(u => u.Email == userName);
-            var tasksList = _db.Project.Include(c => c.Tasks).Where(d => d.User == user).ToList();
-            return View(tasksList);
+
+            try
+            {
+                ApplicationUser user = _db.Users.First(u => u.Email == userName);
+            
+                Project taskProjectDev = _db.Project.First(p => p.Id == projectId);
+
+                if (user != null)
+                {
+                    var project = _db.Project.Include(c => c.Tasks).Where(a =>a.UserName == userName).First(p => p.Id == projectId);
+                    return View(project);
+                }
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
+
+            return View("AllProjectsDev");
+
 
         }
-
 
         //public IActionResult AllProjectByPriority(string taskPriority)    
         //{
@@ -68,6 +109,18 @@ namespace ProjectManagement.Controllers
 
         //    return View(projectsByTag);
         //}
+
+        public async Task<IActionResult> YourMethodName()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier); // will give the user's userId
+            var userName = User.FindFirstValue(ClaimTypes.Name);// will give the user's userName
+
+             ApplicationUser applicationUser = await _userManager.GetUserAsync(User);
+            string userEmail = applicationUser?.Email; // will give the user's Email
+            return View(userId);
+        }
+        private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
+
 
         public IActionResult AllUsers()
         {
@@ -78,7 +131,6 @@ namespace ProjectManagement.Controllers
 
             return View(users);
         }
-
 
 
         public IActionResult Privacy()

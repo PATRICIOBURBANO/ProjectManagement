@@ -10,6 +10,7 @@
         public DateTime DateBegin { get; set; }
         public DateTime DateEnd { get; set; }
         public string? UserId { get; set; }
+        public string? UserName { get; set; }
         public virtual ApplicationUser User { get; set; }
         public bool IsFinished { get; set; } = false;
         public virtual ICollection<TaskProject> Tasks { get; set; }

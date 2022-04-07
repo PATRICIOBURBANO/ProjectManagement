@@ -25,8 +25,8 @@
             </div>
             <div class="form-group">
                 <label asp-for="CompletedPercentage" class="control-label"></label>
-                <input asp-for="CompletedPercentage" class="form-control" />
-                <span asp-validation-for="Budget" class="text-danger"></span>
+                <input type="number" maxlength="2" max="99" min="1" asp-for="CompletedPercentage" class="form-control" />
+                <span asp-validation-for="CompletedPercentage" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Budget" class="control-label"></label>
@@ -35,6 +35,7 @@
             </div>
             
             <div class="form-group">
+                <input type="hidden" value="UserId" name="UserId"/>
                 <input type="submit" value="Save" class="btn btn-primary"asp-route-projectId="Id"/>
             </div>
         </form>

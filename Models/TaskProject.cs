@@ -9,6 +9,7 @@
         public int? ProjectId { get; set; }
         public virtual Project Project { get; set; }
         public string? UserId { get; set; }
+        public string? UserName { get; set; }
         public virtual ApplicationUser User { get; set; }
         public DateTime DateBegin { get; set; }
         public DateTime? DateEnd { get; set; }
