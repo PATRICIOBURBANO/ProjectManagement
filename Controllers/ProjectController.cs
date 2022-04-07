@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -93,6 +94,8 @@ namespace ProjectManagement.Controllers
             }
             return RedirectToAction("AllProjects", "Home");
         }
+
+        
         public async Task<IActionResult> UpdateProject(int? projectId)
         {
             if (projectId == null)
@@ -110,7 +113,7 @@ namespace ProjectManagement.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdateProject(int projectId, [Bind("Name,Content,CompletedPercentage,Budget, UserId")] Project project)
+        public async Task<IActionResult> UpdateProject(int projectId, [Bind("Name,Content,CompletedPercentage,Budget, Id")] Project project)
         {
             if (projectId != project.Id)
             {
@@ -129,6 +132,10 @@ namespace ProjectManagement.Controllers
                     if (!ProjectExists(project.Id))
                     {
                         return NotFound();
+                    }
+                    else
+                    {
+                        throw;
                     }
                    
                 }
@@ -209,6 +216,43 @@ namespace ProjectManagement.Controllers
             }
             return RedirectToAction("AllProjects", "Home");
         }
+        public IActionResult TaskCompleted(int taskId, int projectId)
+        {
+            TaskProject taskSelected = _db.Task.First(a => a.Id == taskId);
+
+            if (taskSelected.IsFinished == true)
+            {
+                taskSelected.IsFinished = false;
+                _db.SaveChanges();
+
+
+            }
+            else if (_db.Task.Where(a => a.ProjectId == projectId).Any(b => b.IsFinished == true))
+            {
+                return RedirectToAction("TasksProject", new { projectId = projectId });
+            }
+            else
+            {
+                taskSelected.IsFinished = true;
+                _db.SaveChanges();
+            }
+            return RedirectToAction("TasksProject", new { projectId = projectId });
+        }
+
+        public IActionResult IncreaseAdvance(int taskId, int projectId)
+        {
+
+            TaskProject answerSelected = _db.Task.First(a => a.Id == taskId);
+            //Question userToMark = _db.Question.First(a => a.UserId);
+
+            answerSelected.CompletedPercentage += 1;
+            //userToMark.Reputation += 5;
+
+            _db.SaveChanges();
+
+            return RedirectToAction("TasksProject", new { projectId = projectId });
+        }
+
 
     }
 }

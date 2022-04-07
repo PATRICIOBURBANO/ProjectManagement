@@ -67,7 +67,7 @@
                         @item.DateEnd
                     </td>
                      <td>
-                        @item.User
+                        @item.UserName
                     </td>
                      <td>
                         @item.CompletedPercentage 
@@ -78,17 +78,17 @@
                     <td>
                         @if (@item.IsFinished)
                         {
-                            <button type="submit" asp-action="" method="post" asp-route-taskId="@item.Id">✌️</button>
+                            <button asp-controller="Project"  type="submit" asp-action="TaskCompleted" method="post" asp-route-taskId="@item.Id">👍</button>
                         }
 
                     </td>
                    
                      <td>
-                        <input type="submit" asp-controller="Home" type="submit" asp-action="" method="post" asp-route-taskId="@item.Id" asp-route-answerId="@item.Id">
+                       
                        
                     </td>
                     <td>
-                        <input asp-controller="Home" type="submit" asp-action="FinishedTask" method="post" asp-route-taskId="@item.Id" asp-route-answerId="@item.Id" >⏳<input>
+                        <button asp-controller="Project" type="submit" asp-action="IncreaseAdvance" method="post" asp-route-taskId="@item.Id" >⏳</button>
                     </td>
                 </tr>
             }

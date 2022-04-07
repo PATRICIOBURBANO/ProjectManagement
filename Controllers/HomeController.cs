@@ -110,17 +110,7 @@ namespace ProjectManagement.Controllers
         //    return View(projectsByTag);
         //}
 
-        public async Task<IActionResult> YourMethodName()
-        {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier); // will give the user's userId
-            var userName = User.FindFirstValue(ClaimTypes.Name);// will give the user's userName
-
-             ApplicationUser applicationUser = await _userManager.GetUserAsync(User);
-            string userEmail = applicationUser?.Email; // will give the user's Email
-            return View(userId);
-        }
-        private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
-
+       
 
         public IActionResult AllUsers()
         {
