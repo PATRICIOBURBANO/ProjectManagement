@@ -15,6 +15,12 @@
     @Model.Content
 
 </p>
+
+<form asp-action="AllRentals"  method="get">
+    <select name="orderMethod" asp-items="ViewBag.OrderOptions"></select>
+    <button type="submit">Apply</button>
+
+</form>
 <p>
     <a asp-controller="Project" asp-action="AddTask" asp-route-projectId="@Model.Id">Add New Task to This Project</a>
 </p>
@@ -47,10 +53,11 @@
                 Status
             </th>
             <th>
-                 Increase 
-                 Advance
+                
             </th>
             <th>
+                 Enter %
+                 Advance
               
             </th>
         </tr>
@@ -78,19 +85,42 @@
                     @item.CompletedPercentage %
                 </td>
                 <td>
-                    @item.TaskPriority
+                    @if ((int)item.TaskPriority == 0)
+                    {
+                        <div style="color : red" >
+                            <strong>@Html.DisplayFor(modelItem => item.TaskPriority)</strong>
+
+                        </div>
+                    }
+                    @if ((int)item.TaskPriority == 1)
+                    {
+                        <div style="color : darkorange" >
+                            <strong>@Html.DisplayFor(modelItem => item.TaskPriority)</strong>
+
+                        </div>
+                    }
+                    @if ((int)item.TaskPriority == 2)
+                    {
+                        <div style="color : greenyellow" >
+                           <strong> @Html.DisplayFor(modelItem => item.TaskPriority)</strong>
+
+                        </div>
+                    }
                 </td>
                 <td>
                     @if (@item.IsFinished)
                     {
-                      
-                      <p>Completed</p>
-
-                       
+                         
+                      <p style="color : red">Completed</p>
+ 
                     }
-
-
+                    
                 </td>
+
+                    <td>
+                    </td>
+
+
 
                 @if (item.CompletedPercentage <100)
                 {
@@ -103,7 +133,7 @@
                       asp-route-taskId="@item.Id"
                       method="post">
                             <input type="number" name="valuePercentage" maxlength="3" min="1" max="100" />
-                            <button type="submit">Submit %</button>
+                            <button type="submit">Submit          </button>
                         </form>
                     </td>
                 }

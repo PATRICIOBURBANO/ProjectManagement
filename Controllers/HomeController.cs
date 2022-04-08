@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ProjectManagement.Data;
 using ProjectManagement.Models;
@@ -44,13 +45,58 @@ namespace ProjectManagement.Controllers
         }
 
         [Authorize(Roles = "Manager")]
-        
         public IActionResult TasksProject(int projectId)
         {
             //var tasksList = _db.Project.Where(b => b.Id == projectId).Include(c => c.Tasks).ToList();
             var project = _db.Project.Include(c => c.Tasks).First(p => p.Id == projectId);
             return View(project);
         }
+
+        [Authorize(Roles = "Manager")]
+        public IActionResult Dashboard()
+        {
+
+            var project = _db.Project.Include(c => c.Tasks);
+            return View(project);
+        }
+
+        public IActionResult GroupedByProject()
+        {
+            var groupedItems = _db.Task.OrderBy(x => x.ProjectId).GroupBy(y => y.ProjectId);
+            return View(groupedItems);
+        }
+        
+
+        //public IActionResult OrderCompletionPriority()
+        //{
+        //    return View();
+        //}
+        //[HttpPost]
+        //public IActionResult OrderCompletionPriority(Priority taskPriority, int? number)
+        //{
+
+        //    var grouped = from s in _db.Task
+        //                  where s. == (int)taskPriority
+        //                  orderby (number == 0) ? s.TaskPriority : s.CompletedPercentage
+        //                  select s;
+        //    var groupedBrand = grouped;
+        //    if (number == 0)
+        //    {
+        //        groupedBrand = grouped.OrderByDescending(x => x.YearMake);
+        //    }
+        //    else
+        //    {
+        //        groupedBrand = grouped.OrderByDescending(x => x.Price);
+        //    }
+        //    ViewBag.Number = number;
+        //    ViewBag.Priority = ;
+        //    ViewBag.Option = (number == 0) ? "Year" : "Price";
+        //    ViewBag.GroupedBrand = groupedBrand;
+
+        //    return View(groupedBrand);
+
+        //}
+
 
 
 
@@ -65,10 +111,36 @@ namespace ProjectManagement.Controllers
 
             return View(allProjects);
         }
+        //public IActionResult AllTasks(string? orderMethod)
+        //{
+        //    ViewBag.OrderOptions = new List<SelectListItem>
+        //    {
+        //        new SelectListItem("Order By Completed", "Completed"),
+        //        new SelectListItem("Order By Priority", "Priority"),
+        //    };
+        //    List<Project> allTasks = _db.Project.Include(r => r.Tasks).ToList();
+        //    if (orderMethod != null)
+        //    {
 
+        //        if (orderMethod == "Completed")
+        //        {
+        //           allTasks = allTasks.OrderBy(c => c.
+        //        }
+        //        else if (orderMethod == "Priority")
+        //        {
+        //            allTasks = _db.Project.Include(c => c.Tasks).ToList();
+        //        }
+
+        //    }
+
+        //    return View(allTasks);
+        //}
 
 
         [Authorize(Roles = "Developer")]
+
+
+
         public IActionResult TasksProjectDev(int projectId)
         {
             //var tasksList = _db.Project.Where(b => b.Id == projectId).Include(c => c.Tasks).ToList();
