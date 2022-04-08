@@ -14,6 +14,7 @@
         public virtual Project Project { get; set; }
         public DateTime DateNotification { get; set; }
 
+        public Notification() { }
         public Notification(Project project, string contentNotification)
         {
             Content = contentNotification;
