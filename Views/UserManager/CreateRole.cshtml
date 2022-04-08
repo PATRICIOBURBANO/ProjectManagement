@@ -1,0 +1,21 @@
+﻿@using Microsoft.AspNetCore.Identity
+@model List<IdentityRole>
+@{
+    ViewData["Title"] = "CreateNewRole";
+}
+
+<h1>Create New Role</h1>
+<h5>Existing Roles </h5>
+<ul>
+    @foreach (var r in Model)
+    {
+        <li>
+            @r.Name <a asp-action="DeleteRole" asp-route-userId="@r.Id">Delete</a>
+        </li>
+    }
+</ul>
+
+<form method="post" asp-action="CreateRole">
+    <input type="text" name="name" placeholder="Enter a Role"/>
+    <button type="submit">Submit</button>
+</form>

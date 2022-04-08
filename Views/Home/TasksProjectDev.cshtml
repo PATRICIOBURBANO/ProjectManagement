@@ -1,55 +1,62 @@
 ﻿@model Project
 
 @{
-    ViewData["Title"] = "TaskProjectsDev";
+    ViewData["Title"] = "TaskProjectDevelopers";
 
 }
+<h1>All Tasks by Project by developer</h1>
 
-    <h5>Title</h5>
-    <p>
-        @Model.Name
-    </p>
-    <h4>Project </h4>
-    <p>
-        @Model.Content
- 
-    </p>
-  
-    <table class="table">
-        <thead>
-            <tr>
-                  <th>
-                    Title
-                </th>
-                <th>
-                    Description Task
-                </th>
-                <th>
-                    Date Begin
-                </th>
-                <th>
-                    Deadline
-                </th>
-                <th>
-                    User Assigned
-                </th>
-                <th>
-                   % Completed
-                </th>
-                <th>
-                    Priority
-                </th>
-                <th>
-                    It is a Task Finished
-                </th>
-                <th>
-                    Select 2
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in @Model.Tasks)
-            {
+
+<h5>Title Project</h5>
+<p>
+    @Model.Name
+</p>
+<h5>Content Project </h5>
+<p>
+    @Model.Content
+
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Title
+            </th>
+            <th>
+                Description Task
+            </th>
+            <th>
+                Date Begin
+            </th>
+            <th>
+                Deadline
+            </th>
+            <th>
+                User Assigned
+            </th>
+            <th>
+                Completed
+            </th>
+            <th>
+                Priority
+            </th>
+            <th>
+                Status
+            </th>
+            <th>
+                 Increase 
+                 Advance
+            </th>
+            <th>
+              
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in @Model.Tasks)
+        {
+           
                 <tr>
                     <td>
                         @item.Title
@@ -63,35 +70,55 @@
                     <td>
                         @item.DateEnd
                     </td>
-                     <td>
-                        @item.User
+                    <td>
+                        @item.UserName
                     </td>
-                     <td>
-                        @item.CompletedPercentage 
+                    <td>
+                        @item.CompletedPercentage %
                     </td>
-                     <td>
+                    <td>
                         @item.TaskPriority
                     </td>
                     <td>
                         @if (@item.IsFinished)
                         {
-                            <button type="submit" asp-action="" method="post" asp-route-taskId="@item.Id">✌️</button>
+
+                            <p>Completed</p>
+
+
                         }
 
+
                     </td>
-                   
-                     <td>
-                        <input type="submit" asp-controller="Home" type="submit" asp-action="" method="post" asp-route-taskId="@item.Id" asp-route-answerId="@item.Id">
-                       
-                    </td>
+
+                    @if (item.CompletedPercentage < 100)
+                    {
+                        <td>
+
+                            <form asp-action="IncreaseAdvance"
+                      asp-controller="Project"
+                      name="projectId"
+                      asp-route-projectId="@Model.Id"
+                      asp-route-taskId="@item.Id"
+                      method="post">
+                                <input type="number" name="valuePercentage" maxlength="4" min="1" max="100" />
+                                <button type="submit">Submit %</button>
+                            </form>
+                        </td>
+                    }
+
                     <td>
-                        <input asp-controller="Home" type="submit" asp-action="FinishedTask" method="post" asp-route-taskId="@item.Id" asp-route-answerId="@item.Id" >⏳<input>
+
+
+
                     </td>
                 </tr>
-            }
-        </tbody>
-    </table>
+            
 
-    <p>
-    <a asp-controller="Home" asp-action="AllProjectsDev">Back to List</a>
-    </p>
+        }
+    </tbody>
+</table>
+
+<p>
+    <a asp-controller="Home" asp-action="AllProjects">Back to List</a>
+</p>

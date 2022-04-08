@@ -39,11 +39,12 @@ namespace ProjectManagement.Controllers
         public IActionResult AllProjects()
         {
             var allProjects = _db.Project.ToList();
-
+          
             return View(allProjects);
         }
 
         [Authorize(Roles = "Manager")]
+        
         public IActionResult TasksProject(int projectId)
         {
             //var tasksList = _db.Project.Where(b => b.Id == projectId).Include(c => c.Tasks).ToList();
@@ -57,11 +58,9 @@ namespace ProjectManagement.Controllers
         [Authorize(Roles = "Developer")]
         public IActionResult AllProjectsDev()
         {
-
-
-            string userLogged = User.Identity.Name;
-
-            var allProjects = _db.Project.Include(a => a.Tasks).Where(b => b.UserName == userLogged).ToList();
+           
+           
+            var allProjects = _db.Project.Include(b => b.Tasks).Where(a =>a.UserName == User.Identity.Name).ToList();
 
 
             return View(allProjects);
@@ -70,37 +69,11 @@ namespace ProjectManagement.Controllers
 
 
         [Authorize(Roles = "Developer")]
-        public IActionResult TasksProjectDev()
-        {
-
-            return View();
-        }
-        [HttpPost]
         public IActionResult TasksProjectDev(int projectId)
         {
-
-            string userName = User.Identity.Name;
-
-            try
-            {
-                ApplicationUser user = _db.Users.First(u => u.Email == userName);
-            
-                Project taskProjectDev = _db.Project.First(p => p.Id == projectId);
-
-                if (user != null)
-                {
-                    var project = _db.Project.Include(c => c.Tasks).Where(a =>a.UserName == userName).First(p => p.Id == projectId);
-                    return View(project);
-                }
-            }
-            catch (Exception ex)
-            {
-                return NotFound(ex.Message);
-            }
-
-            return View("AllProjectsDev");
-
-
+            //var tasksList = _db.Project.Where(b => b.Id == projectId).Include(c => c.Tasks).ToList();
+            var project = _db.Project.Include(c => c.Tasks).First(p => p.Id == projectId);
+            return View(project);
         }
 
         //public IActionResult AllProjectByPriority(string taskPriority)    
@@ -110,7 +83,7 @@ namespace ProjectManagement.Controllers
         //    return View(projectsByTag);
         //}
 
-       
+
 
         public IActionResult AllUsers()
         {
@@ -133,5 +106,32 @@ namespace ProjectManagement.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+
+        public IActionResult ListTasks()
+
+        {
+
+            var userName = User.Identity.Name;
+            ViewBag.UserName = userName;
+            var user = _db.ApplicationUser.First(u => u.UserName == userName);
+            var userId = user.Id;
+            var applicationDbContext = _db.Task.Include(a => a.User)
+                                                       .Include(a => a.Project)
+                                                       .Where(t => t.UserId == userId);
+
+            var today = DateTime.Now;
+            int numberOfNotice = 0;
+
+            //foreach (var task in applicationDbContext)
+            //{
+            //    numberOfNotice += task.Notifications.Where(n => n.Isopen == false).Count();
+            //}
+            ViewBag.NumberOfNotice = numberOfNotice;
+            ViewBag.UserId = userId;
+            return View(applicationDbContext.ToList());
+        }
     }
+
+
 }

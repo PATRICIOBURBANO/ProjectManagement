@@ -11,6 +11,8 @@ namespace ProjectManagement.Models
 
         public virtual ICollection<Notification> Notifications { get; set; } = null!;
 
+        public int? PayDay { get; set; }
+
 
 
         public ApplicationUser()
