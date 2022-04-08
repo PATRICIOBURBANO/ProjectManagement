@@ -216,6 +216,7 @@ namespace ProjectManagement.Controllers
             }
             return RedirectToAction("AllProjects", "Home");
         }
+        
         public IActionResult TaskCompleted(int taskId, int projectId)
         {
             TaskProject taskSelected = _db.Task.First(a => a.Id == taskId);
@@ -238,19 +239,23 @@ namespace ProjectManagement.Controllers
             }
             return RedirectToAction("TasksProject", new { projectId = projectId });
         }
-
-        public IActionResult IncreaseAdvance(int taskId, int projectId)
+        [HttpPost]
+        public IActionResult IncreaseAdvance(int taskId, int projectId, int valuePercentage)
         {
 
-            TaskProject answerSelected = _db.Task.First(a => a.Id == taskId);
+            TaskProject taskSelected = _db.Task.First(a => a.Id == taskId);
             //Question userToMark = _db.Question.First(a => a.UserId);
 
-            answerSelected.CompletedPercentage += 1;
+            taskSelected.CompletedPercentage = valuePercentage;
+            if(taskSelected.CompletedPercentage == 100)
+            {
+                taskSelected.IsFinished = true;
+            }
             //userToMark.Reputation += 5;
 
             _db.SaveChanges();
 
-            return RedirectToAction("TasksProject", new { projectId = projectId });
+            return RedirectToAction("TasksProject","Home",new { projectId = projectId });
         }
 
 

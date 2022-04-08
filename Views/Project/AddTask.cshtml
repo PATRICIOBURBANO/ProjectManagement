@@ -71,10 +71,10 @@
             </div>
         </form>
     </div>
-</div>
+</div>  
 
 <div>
-    <a asp-action="TasksProject">Back to List</a>
+    <a asp-action="TasksProject" asp-controller="Home" asp-route-projectId ="@ViewBag.projectId">Back to List</a>
 </div>
 
 @section Scripts {

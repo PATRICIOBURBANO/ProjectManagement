@@ -1,0 +1,83 @@
+﻿@model Dictionary<ApplicationUser,IList<string>>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>All Users Details</h1>
+
+<p>
+    <a asp-action="CreateRole">Create New Role</a> 
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Name
+            </th>
+            <th>
+                Role
+            </th>
+            <th>
+                Daily Pay
+            </th>
+            <th>
+                Assign Payment
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @item.Key.Email
+                </td>
+                <td>
+                    @foreach (var role in item.Value)
+                    {
+                        <div>
+                            @role
+                        </div>
+                    }
+                </td>
+                <td>
+                    $@item.Key.PayDay
+                </td>
+
+
+                <td>
+
+                    <form asp-action="Payment"
+                      asp-controller="UserManager"
+                      name="Payday"
+                      asp-route-Id="@item.Key.Id"
+                      method="post">
+                        <input type="number" name="amount" maxlength="6" min="1" max="10000" />
+                        <button type="submit">Submit $</button>
+                    </form>
+                </td>
+                <td>
+                    <form asp-action="AssignRole"
+                      asp-controller="UserManager"
+                      name="Payday"
+                      asp-route-Id="@item.Key.Id"
+                      method="post">
+                        <button type="submit">Assign Roles</button>
+                    </form>
+
+                </td>
+
+
+
+
+                <td>
+                    <a asp-action="AssignRole" asp-route-userId="@item.Key.Id">Assign</a>
+                    <a asp-action="DeleteUser" asp-route-userId="@item.Key.Id">Delete</a>
+
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

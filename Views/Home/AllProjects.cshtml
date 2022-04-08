@@ -4,14 +4,20 @@
     ViewData["Title"] = "Manage All Projects";
 }
 
+
 <h1>Manage all Projects </h1>
 
 <p>
     <a style="text-decoration:none" asp-controller="Project" asp-action="AddProject">Create a New Project</a>
   
 </p>
+
 <p>
-      <a style="text-decoration:none" asp-action="AllUsers">See a list all Users</a>
+      <a style="text-decoration:none" asp-controller="UserManager" asp-action="Index">Manage Users</a>
+</p>
+
+<p>
+      <a style="text-decoration:none" asp-controller="UserManager" asp-action="CreateRoles">CreateRoles</a>
 </p>
 
 <table class="table">
@@ -35,11 +41,16 @@
             <th>
                  Priority
             </th>   
-             <th>
-            </th>
+            
+            <th>
+                  Completed %
+             </th>
+               
              <th>
                 Actions
             </th>
+             <th>   
+             </th>
              <th>   
              </th>
         </tr>
@@ -64,9 +75,34 @@
                  @Html.DisplayFor(modelItem => item.Budget)
                 </td>
                  <td>
-                 @Html.DisplayFor(modelItem => item.ProjectPriority)
+                    @if ((int)item.ProjectPriority == 0)
+                    {
+                        <div style="color : red" >
+                            @Html.DisplayFor(modelItem => item.ProjectPriority)
+
+                        </div>
+                    }
+                    @if ((int)item.ProjectPriority == 1)
+                    {
+                        <div style="color : orange" >
+                            @Html.DisplayFor(modelItem => item.ProjectPriority)
+
+                        </div>
+                    }
+                    @if ((int)item.ProjectPriority == 2)
+                    {
+                        <div style="color : greenyellow" >
+                            @Html.DisplayFor(modelItem => item.ProjectPriority)
+
+                        </div>
+                    }
+
                 </td>
-               
+                <td>
+                    @Html.DisplayFor(modelItem =>item.CompletedPercentage)
+
+                </td>
+                   
                 <td>
                     <a style="text-decoration:none" asp-controller="Project" asp-action="UpdateProject" asp-route-projectId="@item.Id">Update </a>
                 </td>
@@ -74,7 +110,7 @@
                     <a style="text-decoration:none" asp-controller="Project" asp-action="DeleteProject" asp-route-projectId="@item.Id">Delete</a>
                 </td>
                 <td>
-                    <a style="text-decoration:none" asp-action="TasksProject" asp-route-projectId="@item.Id">Tasks List</a>
+                    <a style="text-decoration:none" asp-action="TasksProject" asp-route-projectId="@item.Id">Tasks</a>
                 </td>
             </tr>
         }

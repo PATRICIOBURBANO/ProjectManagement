@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProjectManagement.Data;
 
@@ -11,9 +12,10 @@ using ProjectManagement.Data;
 namespace ProjectManagement.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220407234813_addPayDayUSer")]
+    partial class addPayDayUSer
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -235,6 +237,9 @@ namespace ProjectManagement.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("Content")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -251,19 +256,20 @@ namespace ProjectManagement.Migrations
                     b.Property<int?>("TaskId")
                         .HasColumnType("int");
 
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("isImportant")
-                        .HasColumnType("bit");
+                    b.Property<string>("UserName")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
 
                     b.HasIndex("ProjectId");
 
                     b.HasIndex("TaskId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Notification");
                 });
@@ -299,6 +305,9 @@ namespace ProjectManagement.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("ProjectId")
+                        .HasColumnType("int");
+
                     b.Property<int>("ProjectPriority")
                         .HasColumnType("int");
 
@@ -309,6 +318,8 @@ namespace ProjectManagement.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ProjectId");
 
                     b.HasIndex("UserId");
 
@@ -417,6 +428,10 @@ namespace ProjectManagement.Migrations
 
             modelBuilder.Entity("ProjectManagement.Models.Notification", b =>
                 {
+                    b.HasOne("ProjectManagement.Models.ApplicationUser", null)
+                        .WithMany("Notifications")
+                        .HasForeignKey("ApplicationUserId");
+
                     b.HasOne("ProjectManagement.Models.Project", "Project")
                         .WithMany("Notifications")
                         .HasForeignKey("ProjectId");
@@ -425,19 +440,17 @@ namespace ProjectManagement.Migrations
                         .WithMany()
                         .HasForeignKey("TaskId");
 
-                    b.HasOne("ProjectManagement.Models.ApplicationUser", "User")
-                        .WithMany("Notifications")
-                        .HasForeignKey("UserId");
-
                     b.Navigation("Project");
 
                     b.Navigation("Task");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("ProjectManagement.Models.Project", b =>
                 {
+                    b.HasOne("ProjectManagement.Models.Project", null)
+                        .WithMany("Projects")
+                        .HasForeignKey("ProjectId");
+
                     b.HasOne("ProjectManagement.Models.ApplicationUser", "User")
                         .WithMany("Projects")
                         .HasForeignKey("UserId");
@@ -472,6 +485,8 @@ namespace ProjectManagement.Migrations
             modelBuilder.Entity("ProjectManagement.Models.Project", b =>
                 {
                     b.Navigation("Notifications");
+
+                    b.Navigation("Projects");
 
                     b.Navigation("Tasks");
                 });
