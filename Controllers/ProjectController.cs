@@ -43,7 +43,7 @@ namespace ProjectManagement.Controllers
 
         // POST: ProjectController/AddProject
         [HttpPost]
-        public IActionResult AddProject(string name, string content, int budget, PriorityP priority)
+        public IActionResult AddProject(string name, string content, int budget, PriorityP priority, double days)
         {
             string userName = User.Identity.Name;
 
@@ -60,6 +60,7 @@ namespace ProjectManagement.Controllers
                         Budget = budget,
                         CompletedPercentage = 0,
                         DateBegin = DateTime.Now,
+                        DateEnd = DateTime.Now.AddDays(days),
                         User = user,
                         UserId = user.Id,
                         UserName = userName,
@@ -95,15 +96,15 @@ namespace ProjectManagement.Controllers
             return RedirectToAction("AllProjects", "Home");
         }
 
-        
-        public async Task<IActionResult> UpdateProject(int? projectId)
+    
+        public async Task<IActionResult> UpdateProject(int? id, ApplicationUser user)
         {
-            if (projectId == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var project = await _db.Project.FindAsync(projectId);
+            var project = await _db.Project.FindAsync(id);
             if (project == null)
             {
                 return NotFound();
@@ -113,17 +114,24 @@ namespace ProjectManagement.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdateProject(int projectId, [Bind("Name,Content,CompletedPercentage,Budget, Id")] Project project)
+        public async Task<IActionResult> UpdateProject(int id,[Bind("Id,UserId, UserName,Name,Content,Budget")] Project project)
         {
-            if (projectId != project.Id)
+
+            string userName = User.Identity.Name;
+            ApplicationUser user = _db.Users.First(u => u.Email == userName);
+            if (id != project.Id)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+
+            if (!ModelState.IsValid)
             {
                 try
                 {
+                    project.User = user;
+                    project.UserId = user.Id;
+                    project.UserName = user.UserName;
                     _db.Update(project);
                     await _db.SaveChangesAsync();
                 }
@@ -139,7 +147,7 @@ namespace ProjectManagement.Controllers
                     }
                    
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("AllProjects","Home");
             }
             return View(project);
         }
@@ -156,11 +164,23 @@ namespace ProjectManagement.Controllers
             ViewBag.ProjectId = projectId;
             var developers = _db.Users.ToList();
             ViewBag.SelectList = new SelectList(developers, "Id", "UserName");
+            var allTasksRelated = _db.Task.Where(a => a.ProjectId == projectId);
+            int sumTasks = allTasksRelated.Sum(a => a.CompletedPercentage);
+            int averageCompletion = 0;
+            Project project = _db.Project.FirstOrDefault(a => a.Id == projectId);
+            if (allTasksRelated.Any())
+            {
+                averageCompletion = sumTasks / allTasksRelated.Count();
+            }
+
+            project.CompletedPercentage= averageCompletion;
+           
+            _db.SaveChanges();
             return View();
         }
 
         [HttpPost]
-        public IActionResult AddTask(string title, string content, string userId,Priority priorityValue, int projectId)
+        public IActionResult AddTask(string title, string content, string userId,Priority priorityValue, int projectId, double days)
         {
             string userName = User.Identity.Name;
 
@@ -178,8 +198,9 @@ namespace ProjectManagement.Controllers
                         Title = title,
                         Content = content,
                         //Project = project,
-                        //ProjectId = project.Id,, 
+                        //ProjectId = project.Id, 
                         DateBegin = DateTime.Now,
+                        DateEnd = DateTime.Now.AddDays(days),
                         Project = project,
                         ProjectId = project.Id,
                         User = assignedUser,
@@ -214,6 +235,7 @@ namespace ProjectManagement.Controllers
             {
                 return NotFound(ex.Message);
             }
+            //projectid
             return RedirectToAction("AllProjects", "Home");
         }
         
@@ -244,18 +266,42 @@ namespace ProjectManagement.Controllers
         {
 
             TaskProject taskSelected = _db.Task.First(a => a.Id == taskId);
-            //Question userToMark = _db.Question.First(a => a.UserId);
+        
 
             taskSelected.CompletedPercentage = valuePercentage;
             if(taskSelected.CompletedPercentage == 100)
             {
                 taskSelected.IsFinished = true;
             }
-            //userToMark.Reputation += 5;
+        
 
             _db.SaveChanges();
 
             return RedirectToAction("TasksProject","Home",new { projectId = projectId });
+        }
+
+        [HttpPost]
+        public IActionResult EnterComment(int taskId, int projectId, string finalComment)
+        {
+
+            TaskProject taskSelected = _db.Task.First(a => a.Id == taskId);
+        
+
+           
+            if (taskSelected.Comment != null)
+            {
+                taskSelected.Comment = "No final comments";
+            }
+            else
+            {
+                taskSelected.Comment = finalComment;
+            }
+            
+
+
+            _db.SaveChanges();
+
+            return RedirectToAction("TasksProject", "Home", new { projectId = projectId });
         }
 
 

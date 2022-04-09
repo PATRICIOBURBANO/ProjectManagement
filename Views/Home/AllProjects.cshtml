@@ -16,9 +16,6 @@
       <a style="text-decoration:none" asp-controller="UserManager" asp-action="Index">Manage Users</a>
 </p>
 
-<p>
-      <a style="text-decoration:none" asp-controller="UserManager" asp-action="CreateRoles">CreateRoles</a>
-</p>
 
 <table class="table">
     <thead>
@@ -36,7 +33,7 @@
                Deadline
             </th> 
             <th>
-                 $@Html.DisplayNameFor(model => model.Budget)
+                 @Html.DisplayNameFor(model => model.Budget)
             </th>
             <th>
                  Priority
@@ -66,13 +63,14 @@
                     @Html.DisplayFor(modelItem => item.Content)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.DateBegin)
+                       @DateOnly.FromDateTime(@item.DateBegin)
+                    
                 </td>
                 <td>
-                 @Html.DisplayFor(modelItem => item.DateEnd)
+                       @DateOnly.FromDateTime(@item.DateEnd)
                 </td>
                 <td>
-                 @Html.DisplayFor(modelItem => item.Budget)
+                 $@Html.DisplayFor(modelItem => item.Budget)
                 </td>
                  <td>
                     @if ((int)item.ProjectPriority == 0)
@@ -104,7 +102,7 @@
                 </td>
                    
                 <td>
-                    <a style="text-decoration:none" asp-controller="Project" asp-action="UpdateProject" asp-route-projectId="@item.Id">Update </a>
+                    <a style="text-decoration:none" asp-controller="Project" asp-action="UpdateProject" asp-route-Id="@item.Id">Update </a>
                 </td>
                 <td>
                     <a style="text-decoration:none" asp-controller="Project" asp-action="DeleteProject" asp-route-projectId="@item.Id">Delete</a>

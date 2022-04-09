@@ -40,7 +40,8 @@ namespace ProjectManagement.Controllers
         public IActionResult AllProjects()
         {
             var allProjects = _db.Project.ToList();
-          
+            
+
             return View(allProjects);
         }
 
@@ -49,10 +50,20 @@ namespace ProjectManagement.Controllers
         {
             //var tasksList = _db.Project.Where(b => b.Id == projectId).Include(c => c.Tasks).ToList();
             var project = _db.Project.Include(c => c.Tasks).Include(p => p.Notifications).Include(p => p.User).First(p => p.Id == projectId);
+            var allTasksRelated = _db.Task.Where(a => a.ProjectId == projectId);
+            int sumTasks = allTasksRelated.Sum(a => a.CompletedPercentage);
+            int averageCompletion = 0;
+            if (allTasksRelated.Any())
+            {
+                averageCompletion = sumTasks / allTasksRelated.Count();
+            }
+            
+            project.CompletedPercentage = averageCompletion;
             project.CreateNotification(project);
             _db.SaveChanges();
             return View(project);
         }
+
 
         [Authorize(Roles = "Manager")]
         public IActionResult Dashboard()
@@ -140,9 +151,6 @@ namespace ProjectManagement.Controllers
 
 
         [Authorize(Roles = "Developer")]
-
-
-
         public IActionResult TasksProjectDev(int projectId)
         {
             //var tasksList = _db.Project.Where(b => b.Id == projectId).Include(c => c.Tasks).ToList();

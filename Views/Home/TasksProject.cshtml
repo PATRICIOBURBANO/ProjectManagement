@@ -4,20 +4,34 @@
     ViewData["Title"] = "TasksProject";
 
 }
-<h1>All Tasks by Project</h1>
+<h1>Tasks Details by Project</h1>
 
-<h5>Title Project</h5>
+@if (@Model.Notifications.Any())
+{
+    <a class="btn btn-primary" style="text-decoration:none; border:thick; color: yellow" asp-controller="Notification" asp-action="Details" asp-route-projectId="@Model.Id">You have @Model.Notifications.Count() notifications</a>
+
+}
+<h5>Project</h5>
 <p>
+
     @Model.Name
 </p>
-<h5>Content Project </h5>
+<h5>Description </h5>
 <p>
     @Model.Content
 
 </p>
+
+<form asp-action="TasksProject" method="get">
+    <select name="orderMethod" asp-items="ViewBag.OrderOptions"></select>
+    <button type="submit">Sort</button>
+
+</form>
 <p>
-        <a asp-controller="Project" asp-action="AddTask" asp-route-projectId="@Model.Id">Add New Task to This Project</a>
-    </p>
+    <a class="btn btn-primary" asp-controller="Project" asp-action="AddTask" asp-route-projectId="@Model.Id">Add New Task to Project</a>
+</p>
+
+
 
 <table class="table">
     <thead>
@@ -44,15 +58,16 @@
                 Priority
             </th>
             <th>
+                Enter %
+                Advance
+
+            </th>
+            <th>
                 Status
             </th>
             <th>
-                
-            </th>
-            <th>
-                 Enter %
-                 Advance
-              
+
+
             </th>
         </tr>
     </thead>
@@ -61,82 +76,174 @@
         {
             <tr>
                 <td>
-                    @item.Title
-                </td>
-                <td>
-                    @item.Content
-                </td>
-                <td>
-                    @item.DateBegin
-                </td>
-                <td>
-                    @item.DateEnd
-                </td>
-                <td>
-                    @item.UserName
-                </td>
-                <td>
-                    @item.CompletedPercentage %
-                </td>
-                <td>
-                    @if ((int)item.TaskPriority == 0)
+                    @if (@item.IsFinished)
                     {
-                        <div style="color : red" >
-                            <strong>@Html.DisplayFor(modelItem => item.TaskPriority)</strong>
-
+                        <div style="color: lightgray">
+                            @item.Title
                         </div>
                     }
-                    @if ((int)item.TaskPriority == 1)
+                    else
                     {
-                        <div style="color : darkorange" >
-                            <strong>@Html.DisplayFor(modelItem => item.TaskPriority)</strong>
+                        @item.Title
+                    }
 
+
+                </td>
+                <td>
+                    @if (@item.IsFinished)
+                    {
+                        <div style="color: lightgray">
+                            @item.Content
                         </div>
                     }
-                    @if ((int)item.TaskPriority == 2)
+                    else
                     {
-                        <div style="color : greenyellow" >
-                           <strong> @Html.DisplayFor(modelItem => item.TaskPriority)</strong>
-
-                        </div>
+                        @item.Content
                     }
                 </td>
                 <td>
                     @if (@item.IsFinished)
                     {
-                         
-                      <p style="color : red">Completed</p>
- 
+                        <div style="color: lightgray" >
+                            @DateOnly.FromDateTime(@item.DateBegin)
+                        </div>
                     }
-                    
+                    else
+                    {
+                        @DateOnly.FromDateTime(@item.DateBegin)
+                    }
                 </td>
+                <td>
+                    @if (@item.IsFinished)
+                    {
+                        <div style="color: lightgray">
+                        @DateOnly.FromDateTime(@item.DateEnd)
+                        </div>
+                    }
+                    else
+                    {
+                        @DateOnly.FromDateTime(@item.DateEnd)
+                    }
+                </td>
+                <td>
+                    @if (@item.IsFinished)
+                    {
+                        <div style="color : lightgray">
+                            @item.UserName
+                        </div>
+                    }
+                    else
+                    {
+                        @item.UserName
+                    }
+                </td>
+                <td>
+                    @if (@item.IsFinished)
+                    {
+                        <div style="color : lightgray; align-content:center">
+                            @item.CompletedPercentage%
+                        </div>
+                    }
+                    else
+                    {
+                        <div>
 
-                    <td>
+                            @item.CompletedPercentage%
+                        </div>
+
+                    }
+                </td>
+                <td>
+                    @if (@item.IsFinished)
+                    {
+                        <div style="color : lightgray">
+                            @Html.DisplayFor(modelItem => item.TaskPriority)
+
+                        </div>
+                    }
+                    else
+                    {
+                        @if ((int)item.TaskPriority == 0)
+                        {
+                            <div style="color : red">
+                                @Html.DisplayFor(modelItem => item.TaskPriority)
+
+                            </div>
+                        }
+                        @if ((int)item.TaskPriority == 1)
+                        {
+                            <div style="color : darkorange">
+                                @Html.DisplayFor(modelItem => item.TaskPriority)
+
+                            </div>
+                        }
+                        @if ((int)item.TaskPriority == 2)
+                        {
+                            <div style="color : greenyellow">
+                                @Html.DisplayFor(modelItem => item.TaskPriority)
+
+                            </div>
+                        }
+                    }
                     </td>
-
-
-
-                @if (item.CompletedPercentage <100)
-                {
                     <td>
-                     
-                      <form asp-action="IncreaseAdvance"
+                    @if (item.CompletedPercentage < 100)
+                    {
+                   
+
+                        <form asp-action="IncreaseAdvance" 
                       asp-controller="Project"
                       name="projectId"
                       asp-route-projectId="@Model.Id"
                       asp-route-taskId="@item.Id"
                       method="post">
-                            <input type="number" name="valuePercentage" maxlength="3" min="1" max="100" />
-                            <button type="submit">Submit          </button>
+                            <input type="number" name="valuePercentage" maxlength="18" min="1" max="100" />
+                            <button  type="submit">Apply</button>
+                        </form>
+                   
+                    }
+                    else
+                    {
+                    <p> </p>
+                    }
+                     </td>
+
+
+
+
+                     <td>
+                        @if (@item.IsFinished)
+                        {
+                        <p style="color : darkred; font-style: italic">Completed</p>
+                        }
+                        else
+                        {
+
+                        <p style="color : blue; font-style: italic">In process</p>
+
+                        }
+
+                     </td>
+
+
+                    @if (item.CompletedPercentage == 100 && item.Comment != null)
+                    {
+                    <td>
+
+                        <form asp-action="EnterComment"
+                      asp-controller="Project"
+                      name="taskId"
+                      asp-route-projectId="@Model.Id"
+                      asp-route-taskId="@item.Id"
+                      method="post">
+                            <input type="text" name="finalComment" class="form-control" />
+                            <button type="submit">Comment</button>
                         </form>
                     </td>
-                }
+                    }
 
-                <td>
-
-  
-
-                </td>
+               
+                
             </tr>
         }
     </tbody>

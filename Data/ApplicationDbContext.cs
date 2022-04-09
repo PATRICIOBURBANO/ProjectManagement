@@ -14,7 +14,7 @@ namespace ProjectManagement.Data
         public DbSet<ProjectManagement.Models.Project> Project { get; set; }
         public DbSet<ProjectManagement.Models.TaskProject> Task { get; set; }
         public DbSet<ProjectManagement.Models.Notification> Notification { get; set; }
-        public DbSet<ApplicationUser> ApplicationUser { get; set; }
+        public DbSet<ProjectManagement.Models.ApplicationUser> ApplicationUser { get; set; }
 
     }
 }

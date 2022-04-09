@@ -7,7 +7,10 @@
 <h1>All Users Details</h1>
 
 <p>
-    <a asp-action="CreateRole">Create New Role</a> 
+    <a asp-action="CreateRole">Create New Role</a> <p>                   </p> <a asp-action="CreateUser">Create New User</a> 
+</p>
+<p>
+    <a asp-action="CreateRole">Create New User</a> 
 </p>
 
 <table class="table">
@@ -59,13 +62,9 @@
                     </form>
                 </td>
                 <td>
-                    <form asp-action="AssignRole"
-                      asp-controller="UserManager"
-                      name="Payday"
-                      asp-route-Id="@item.Key.Id"
-                      method="post">
-                        <button type="submit">Assign Roles</button>
-                    </form>
+                      
+                        <button asp-action="AssignRole" asp-route-userId="@item.Key.Id" type="submit">Assign Roles</button>
+                  
 
                 </td>
 
@@ -73,6 +72,7 @@
 
 
                 <td>
+                     <button asp-action="AssignRole" asp-route-userId="@item.Key.Id" type="submit">Assign Roles</button>
                     <a asp-action="AssignRole" asp-route-userId="@item.Key.Id">Assign</a>
                     <a asp-action="DeleteUser" asp-route-userId="@item.Key.Id">Delete</a>
 
@@ -81,3 +81,7 @@
         }
     </tbody>
 </table>
+
+<p>
+    <a asp-controller="Home" asp-action="AllProjects">Back to List</a>
+</p>

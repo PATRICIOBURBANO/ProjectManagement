@@ -4,7 +4,7 @@
     ViewData["Title"] = "Add Project";
 }
 
-<h1>Add New Project</h1>
+<h1>Add a New Project</h1>
 
 <h4>Project</h4>
 <hr />
@@ -25,11 +25,19 @@
             </div>
             <div class="form-group">
                 <label asp-for="Budget" class="control-label"></label>
-                <input type="number" name="Budget" asp-for="Budget" class="form-control" />
+                <input  required="required" type="number" name="Budget" asp-for="Budget" class="form-control" maxlength="15" min="1" max="100000"/>
                 <span asp-validation-for="Budget" class="text-danger"></span>
             </div>
-            <div>
-                <select name="priority" asp-for="ProjectPriority" asp-items="Html.GetEnumSelectList<PriorityP>()">Priority Project</select>
+            <div class="form-group">
+                <label class="control-label">Days Deadline</label>
+                <span class="text-danger"></span>
+                <input type="number" required="required" name="days" maxlength="15" min="1" max="365" class="form-control" />
+                
+            </div>
+            <div class="form-group">
+                <label asp-for="ProjectPriority" class="control-label">Priority</label>
+                <select name="priority" asp-for="ProjectPriority" asp-items="Html.GetEnumSelectList<PriorityP>()" class="form-control" >Priority Project</select>
+                <span asp-validation-for="Budget" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
