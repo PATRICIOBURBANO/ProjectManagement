@@ -213,7 +213,7 @@ namespace ProjectManagement.Controllers
             {
                 var user = _context.ApplicationUser.First(u => u.Email == username);
                 var tasksOfUser = _context.Task.Where(t => t.UserId == user.Id).ToList();
-                var notification = _context.Notification.Where(t => t.UserName == user.UserName).ToList();
+                var notification = _context.Notification.Where(t => t.User.UserName == user.UserName).ToList();
                 foreach (var n in notification)
                 {
                     n.Id = default;

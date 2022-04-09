@@ -15,15 +15,9 @@
     @Model.Content
 
 </p>
-
-<form asp-action="AllRentals"  method="get">
-    <select name="orderMethod" asp-items="ViewBag.OrderOptions"></select>
-    <button type="submit">Apply</button>
-
-</form>
 <p>
-    <a asp-controller="Project" asp-action="AddTask" asp-route-projectId="@Model.Id">Add New Task to This Project</a>
-</p>
+        <a asp-controller="Project" asp-action="AddTask" asp-route-projectId="@Model.Id">Add New Task to This Project</a>
+    </p>
 
 <table class="table">
     <thead>

@@ -15,16 +15,46 @@
         public bool IsFinished { get; set; } = false;
         public virtual ICollection<TaskProject> Tasks { get; set; }
         public virtual ICollection<Notification> Notifications { get; set; }
-        public virtual ICollection<Project> Projects { get; set; }
         public PriorityP ProjectPriority { get; set; }
 
         public Project()
         {
             Tasks = new HashSet<TaskProject>();
             Notifications = new HashSet<Notification>();
-            Projects = new HashSet<Project>();
         }
+        public void CreateNotification(Project project)
+        {
 
+            var now = DateTime.Now;
+
+            if(project.DateEnd < now && project.Tasks.Any(t => t.IsFinished == false)) /*will get a notification if a project passed a deadline with any unfinished tasks.*/
+            {
+                string contentNotification = $"Project: {project.Name} has finished with {project.Tasks.Count(t => t.IsFinished == false)} pending tasks.";
+                Notification notification = new Notification(project, contentNotification);
+                project.Notifications.Add(notification);
+            }
+
+            if((project.Tasks.Any(t => t.IsFinished == true)) || project.IsFinished == true) /*- gets a notification whenever a task or a project is completed.*/
+            {
+                if (project.Tasks.Any(t => t.IsFinished == true))
+                {
+                    List<TaskProject> taskFinished = project.Tasks.Where(t => t.IsFinished == true).ToList();
+                    foreach (var task in taskFinished)
+                    {
+                        string contentNotification = $"Task: {task.Title} has been finished by: {task.UserName}";
+                        Notification notification = new Notification(project, contentNotification, task);
+                        project.Notifications.Add(notification);
+                    }
+                }
+
+                if(project.IsFinished == true)
+                {
+                    string contentNotification = $"Project: {project.Name} is complete with {project.Tasks.Count(t => t.IsFinished == true)} tasks done.";
+                    Notification notification = new Notification(project, contentNotification);
+                    project.Notifications.Add(notification);
+                }
+            }
+        }
     }
     public enum PriorityP
     {
@@ -32,5 +62,6 @@
         Medium,
         Low
     }
+
 
 }

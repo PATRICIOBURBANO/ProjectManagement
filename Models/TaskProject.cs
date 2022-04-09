@@ -17,8 +17,6 @@
         public int CompletedPercentage { get; set; }
 
         public Priority TaskPriority { get; set; }
-
-    
     }
     public enum Priority
     {
