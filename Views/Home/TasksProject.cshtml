@@ -17,7 +17,7 @@
 @if (@Model.Notifications.Any())
 {
     <h4>Notifications</h4>
-    <a style="text-decoration:none" asp-controller="Notification" asp-action="Details" asp-route-projectId="@Model.Id">You have @Model.Notifications.Count() notifications</a>
+    <a style="text-decoration:none" asp-controller="Notification" asp-action="Details" asp-route-projectId="@Model.Id">You have @Model.Notifications.Count(n => n.Status == false) notifications</a>
 }
 <p>
         <a asp-controller="Project" asp-action="AddTask" asp-route-projectId="@Model.Id">Add New Task to This Project</a>

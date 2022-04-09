@@ -34,7 +34,7 @@ namespace ProjectManagement.Controllers
             {
                 noti.Status = true;
             }
-
+            _db.SaveChanges();
             return View(notification);
         }
 
