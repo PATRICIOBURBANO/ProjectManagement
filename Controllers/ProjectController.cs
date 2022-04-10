@@ -220,11 +220,72 @@ namespace ProjectManagement.Controllers
             return RedirectToAction("TasksProject", "Home", new { projectId = projectId });
         }
 
+        public async Task<IActionResult> UpdateTask(int? id, ApplicationUser user)
+        {
+            if(id == null)
+            {
+                return NotFound();
+            }
+
+            var task = await _db.Task.FindAsync(id);
+
+            if(task == null)
+            {
+                return NotFound();
+            }
+            return View(task);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdateTask(int id, [Bind("Id,Title,Content,DateBegin,DateEnd,TaskPriority, ProjectId")] TaskProject task)
+        {
+            string userName = User.Identity.Name;
+            ApplicationUser user = _db.Users.First(u => u.Email == userName);
+            Project project = _db.Project.First(p => p.Id == task.ProjectId);
+
+            if (id != task.Id)
+            {
+                return NotFound();
+            }
+
+            if (!ModelState.IsValid)
+            {
+                try
+                {
+                    task.User = user;
+                    task.UserId = user.Id;
+                    task.UserName = user.UserName;
+                    task.Project = project;
+                    task.ProjectId = project.Id;
+                    _db.Update(task);
+                    await _db.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!ProjectExists(task.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction("TasksProject", "Home", new { projectId = task.ProjectId });
+            }
+            return View(task);
+        }
+
+        private bool TaskExists(int taskId)
+        {
+            return _db.Task.Any(e => e.Id == taskId);
+        }
         public IActionResult DeleteTask(int taskId)
         {
+            TaskProject task = _db.Task.First(t => t.Id == taskId);
             try
             {
-                TaskProject task = _db.Task.First(t => t.Id == taskId);
                 if (task != null)
                 {
                     _db.Task.Remove(task);
@@ -236,7 +297,7 @@ namespace ProjectManagement.Controllers
                 return NotFound(ex.Message);
             }
             //projectid
-            return RedirectToAction("AllProjects", "Home");
+            return RedirectToAction("TasksProject", "Home", new { projectId = task.ProjectId });
         }
         
         public IActionResult TaskCompleted(int taskId, int projectId)

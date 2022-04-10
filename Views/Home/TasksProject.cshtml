@@ -70,6 +70,11 @@
                 Comment
             </th>
              <th>
+                Actions
+            </th>
+             <th>   
+             </th>
+             <th>
             </th>
 
         </tr>
@@ -257,7 +262,15 @@
                   
                     }
                       </td>
-
+                    <td>
+                        <a style="text-decoration:none" asp-controller="Project" asp-action="UpdateTask" asp-route-Id="@item.Id">Update </a>
+                    </td>
+                    <td>
+                        <a style="text-decoration:none" asp-controller="Project" asp-action="DeleteTask" asp-route-taskId="@item.Id">Delete</a>
+                    </td>
+                    <td>
+                    
+                    </td>
                
                 
             </tr>
