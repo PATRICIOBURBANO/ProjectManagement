@@ -200,12 +200,25 @@ namespace ProjectManagement.Controllers
         [Authorize(Roles = "Developer")]
         public IActionResult AllProjectsDev()
         {
-           
-           
-            var allProjects = _db.Project.Include(b => b.Tasks).Where(a =>a.UserName == User.Identity.Name).ToList();
 
+            //string userName = User.Identity.Name;
 
-            return View(allProjects);
+            //Project project = _db.Project.First();
+            //var projectUser = project.UserName;
+
+            //var allProjects = _db.Project.Include(b => b.Tasks).Include(b => b.User).Where(a =>a.UserName == User.Identity.Name).ToList();
+
+            List<Project> projectsByDev = new List<Project>();
+
+            foreach(var project in _db.Project.Include(p => p.Tasks).ThenInclude(t => t.User))
+            {
+                if(project.Tasks.Any(p => p.UserName == User.Identity.Name))
+                {
+                    projectsByDev.Add(project);
+                }
+            }
+
+            return View(projectsByDev);
         }
         //public IActionResult AllTasks(string? orderMethod)
         //{
