@@ -195,9 +195,6 @@ namespace ProjectManagement.Migrations
                     b.Property<string>("PasswordHash")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("PayDay")
-                        .HasColumnType("int");
-
                     b.Property<string>("PhoneNumber")
                         .HasColumnType("nvarchar(max)");
 
@@ -265,7 +262,7 @@ namespace ProjectManagement.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Notification");
+                    b.ToTable("Notification", (string)null);
                 });
 
             modelBuilder.Entity("ProjectManagement.Models.Project", b =>
@@ -312,7 +309,7 @@ namespace ProjectManagement.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Project");
+                    b.ToTable("Project", (string)null);
                 });
 
             modelBuilder.Entity("ProjectManagement.Models.TaskProject", b =>
@@ -361,7 +358,7 @@ namespace ProjectManagement.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Task");
+                    b.ToTable("Task", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
