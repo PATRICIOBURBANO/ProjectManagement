@@ -66,9 +66,11 @@
                 Status
             </th>
             <th>
-
-
+                Comment
             </th>
+             <th>
+            </th>
+
         </tr>
     </thead>
     <tbody>
@@ -224,13 +226,25 @@
                         }
 
                      </td>
+                     <td>
+                            @if (@item.IsFinished)
+                        {
+                        <p style="color : darkred; font-style: italic">@item.Comment</p>
+                        }
+                        else
+                        {
+
+                        <p style="color : blue; font-style: italic"></p>
+
+                        }
 
 
-                    @if (item.CompletedPercentage == 100 && item.Comment != null)
-                    {
+                    </td>
+
+
                     <td>
-
-                        <form asp-action="EnterComment"
+                    @if (item.CompletedPercentage == 100)
+                    {<form asp-action="EnterComment"
                       asp-controller="Project"
                       name="taskId"
                       asp-route-projectId="@Model.Id"
@@ -239,8 +253,9 @@
                             <input type="text" name="finalComment" class="form-control" />
                             <button type="submit">Comment</button>
                         </form>
-                    </td>
+                  
                     }
+                      </td>
 
                
                 

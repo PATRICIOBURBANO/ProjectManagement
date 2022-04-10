@@ -84,7 +84,7 @@ namespace ProjectManagement.Controllers
             {
                 Project project = _db.Project.First(p => p.Id == projectId);
                 if (project != null)
-                {
+                {   
                     _db.Project.Remove(project);
                     _db.SaveChanges();
                 }
@@ -114,7 +114,7 @@ namespace ProjectManagement.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdateProject(int id,[Bind("Id,UserId, UserName,Name,Content,Budget")] Project project)
+        public async Task<IActionResult> UpdateProject(int id,[Bind("Id,Name,Content,Budget,ProjectPriority, DateBegin, DateEnd")] Project project)
         {
 
             string userName = User.Identity.Name;
