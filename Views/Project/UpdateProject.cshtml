@@ -23,15 +23,26 @@
                 <input asp-for="Content" class="form-control" />
                 <span asp-validation-for="Content" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="CompletedPercentage" class="control-label"></label>
-                <input type="number" maxlength="2" max="99" min="1" asp-for="CompletedPercentage" class="form-control" />
-                <span asp-validation-for="CompletedPercentage" class="text-danger"></span>
-            </div>
+           
             <div class="form-group">
                 <label asp-for="Budget" class="control-label"></label>
                 <input asp-for="Budget" class="form-control" />
                 <span asp-validation-for="Budget" class="text-danger"></span>
+            </div>
+             <div class="form-group">
+                <label asp-for="ProjectPriority" class="control-label"></label>
+                <input asp-for="ProjectPriority" class="form-control" />
+                <span asp-validation-for="ProjectPriority" class="text-danger"></span>
+            </div>
+             <div class="form-group">
+                <label asp-for="DateBegin" class="control-label"></label>
+                <input asp-for="DateBegin" class="form-control" onfocus="(this.type='date') />
+                <span asp-validation-for="DateBegin" class="text-danger"></span>
+            </div>
+             <div class="form-group">
+                <label asp-for="DateEnd" class="control-label"></label>
+                <input asp-for="DateEnd" class="form-control" />
+                <span asp-validation-for="DateEnd" class="text-danger"></span>
             </div>
             
             <div class="form-group">

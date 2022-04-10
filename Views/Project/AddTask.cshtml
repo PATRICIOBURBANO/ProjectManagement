@@ -5,9 +5,8 @@
     ViewData["Title"] = "AddTask";
 }
 
-<h1>AddTask</h1>
+<h1>Add a New Task</h1>
 
-<h4>TaskProject</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -53,16 +52,22 @@
 
             </div>
             <div class="form-group">
-                <label asp-for="UserId" class="control-label"></label>
-                <select asp-for="UserId" asp-items="@ViewBag.SelectList" name="userId">
+                <label asp-for="UserId" class="control-label">User Identity</label>
+                <select asp-for="UserId" asp-items="@ViewBag.SelectList" name="userId" class="form-control" >
                 </select>
             </div>
             <div>
 
             </div>
             <div class="form-group">
-                <label asp-for="TaskPriority" class="control-label"></label>
-                <select name="priorityValue" asp-for="TaskPriority" asp-items="Html.GetEnumSelectList<Priority>()">
+                <label class="control-label">Days Deadline</label>
+                <span class="text-danger"></span>
+                <input type="number" required="required" name="days" maxlength="15" min="1" max="365" class="form-control" />
+                
+            </div>
+            <div class="form-group">
+                <label asp-for="TaskPriority" class="control-label">Priority</label>
+                <select name="priorityValue" asp-for="TaskPriority" asp-items="Html.GetEnumSelectList<Priority>()" class="form-control" >
                 </select>
             </div>
             <div class="form-group">
