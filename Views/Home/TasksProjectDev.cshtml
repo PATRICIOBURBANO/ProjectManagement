@@ -56,7 +56,8 @@
     <tbody>
         @foreach (var item in @Model.Tasks)
         {
-           
+            if(item.User.Email == @ViewBag.UserLogged)
+            {
                 <tr>
                     <td>
                         @item.Title
@@ -113,12 +114,12 @@
 
                     </td>
                 </tr>
-            
-
+                
+            }
         }
     </tbody>
 </table>
 
 <p>
-    <a asp-controller="Home" asp-action="AllProjects">Back to List</a>
+    <a asp-controller="Home" asp-action="AllProjectsDev">Back to List</a>
 </p>

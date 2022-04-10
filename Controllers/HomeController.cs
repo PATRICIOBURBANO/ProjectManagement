@@ -250,7 +250,8 @@ namespace ProjectManagement.Controllers
         public IActionResult TasksProjectDev(int projectId)
         {
             //var tasksList = _db.Project.Where(b => b.Id == projectId).Include(c => c.Tasks).ToList();
-            var project = _db.Project.Include(c => c.Tasks).First(p => p.Id == projectId);
+            var project = _db.Project.Include(c => c.Tasks).ThenInclude(c => c.User).First(p => p.Id == projectId);
+            ViewBag.UserLogged = User.Identity.Name;
             return View(project);
         }
 
