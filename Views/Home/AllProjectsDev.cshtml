@@ -4,7 +4,7 @@
     ViewData["Title"] = "Developer All Projects";
 }
 
-<h1>Manage all Projects by Developer</h1>
+<h1>Projects by Developer</h1>
 
 
 
@@ -23,14 +23,10 @@
             <th>
                Deadline
             </th> 
-            <th>
-                 $@Html.DisplayNameFor(model => model.Budget)
-            </th>
+            
             <th>
                  Priority
             </th>   
-             <th>
-            </th>
              <th>
                 Actions
             </th>
@@ -54,17 +50,32 @@
                 <td>
                  @Html.DisplayFor(modelItem => item.DateEnd)
                 </td>
-                <td>
-                 @Html.DisplayFor(modelItem => item.Budget)
-                </td>
-                 <td>
-                 @Html.DisplayFor(modelItem => item.ProjectPriority)
+               
+                  <td>
+                    @if ((int)item.ProjectPriority == 0)
+                    {
+                        <div style="color : red" >
+                            @Html.DisplayFor(modelItem => item.ProjectPriority)
+
+                        </div>
+                    }
+                    @if ((int)item.ProjectPriority == 1)
+                    {
+                        <div style="color : orange" >
+                            @Html.DisplayFor(modelItem => item.ProjectPriority)
+
+                        </div>
+                    }
+                    @if ((int)item.ProjectPriority == 2)
+                    {
+                        <div style="color : greenyellow" >
+                            @Html.DisplayFor(modelItem => item.ProjectPriority)
+
+                        </div>
+                    }
+
                 </td>
                
-                <td>
-                    <a style="text-decoration:none" asp-controller="Project" asp-action="UpdateAdvance" asp-route-projectId="@item.Id">Update Advance </a>
-                </td>
-                
                 <td>
                     <a style="text-decoration:none" asp-action="TasksProjectDev" asp-route-projectId="@item.Id">Tasks List</a>
                 </td>

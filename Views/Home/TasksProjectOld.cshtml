@@ -1,5 +1,4 @@
-﻿
-@model Project
+﻿@model Project
 
 @{
     ViewData["Title"] = "TasksProject";
@@ -25,13 +24,16 @@
 </p>
 
 <form asp-action="TasksProject" method="get">
-    <select name="sort" asp-items="ViewBag.OrderOptions"></select>
+    <select name="orderMethod" asp-items="ViewBag.OrderOptions"></select>
     <button type="submit">Sort</button>
 
 </form>
 <p>
     <a class="btn btn-primary" asp-controller="Project" asp-action="AddTask" asp-route-projectId="@Model.Id">Add New Task to Project</a>
 </p>
+
+
+
 <table class="table">
     <thead>
         <tr>
@@ -42,21 +44,20 @@
                 Description Task
             </th>
             <th>
-                <a asp-action="TasksProject" asp-route-sortOrder="@ViewData["DateSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]" asp-route-projectId="@Model.Id">Date Begin</a>
-            </th>
-              <th>
-                <a asp-action="TasksProject" asp-route-sortOrder="@ViewData["DateSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]" asp-route-projectId="@Model.Id">Date Ends</a>
+                Date Begin
             </th>
             <th>
-                  <a asp-action="TasksProject" asp-route-sortOrder="@ViewData["UserSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]" asp-route-projectId="@Model.Id">User Assigned</a>
+                Deadline
             </th>
-          
             <th>
-                <a asp-action="TasksProject" asp-route-sortOrder="@ViewData["CompletedSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]" asp-route-projectId="@Model.Id">Completed</a>
-             </th>
+                User Assigned
+            </th>
             <th>
-                 <a asp-action="TasksProject" asp-route-sortOrder="@ViewData["PrioritySortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]" asp-route-projectId="@Model.Id">Priority</a>
-            </th>   
+                Completed
+            </th>
+            <th>
+                Priority
+            </th>
             <th>
                 Enter %
                 Advance
@@ -69,12 +70,14 @@
                 Comment
             </th>
              <th>
+                Actions
+            </th>
+             <th>   
+             </th>
+             <th>
             </th>
 
-             </tr>
-        
-            
-            
+        </tr>
     </thead>
     <tbody>
         @foreach (var item in @Model.Tasks)
@@ -232,7 +235,7 @@
                      <td>
                             @if (@item.IsFinished)
                         {
-                        <p style="color : black; font-style: italic">@item.Comment</p>
+                        <p style="color : darkred; font-style: italic">@item.Comment</p>
                         }
                         else
                         {
@@ -246,7 +249,7 @@
 
 
                     <td>
-                    @if (item.CompletedPercentage == 100  && @item.Comment == null)
+                    @if (item.CompletedPercentage == 100)
                     {<form asp-action="EnterComment"
                       asp-controller="Project"
                       name="taskId"
@@ -259,7 +262,17 @@
                   
                     }
                       </td>
-   
+                    <td>
+                        <a style="text-decoration:none" asp-controller="Project" asp-action="UpdateTask" asp-route-Id="@item.Id">Update </a>
+                    </td>
+                    <td>
+                        <a style="text-decoration:none" asp-controller="Project" asp-action="DeleteTask" asp-route-taskId="@item.Id">Delete</a>
+                    </td>
+                    <td>
+                    
+                    </td>
+               
+                
             </tr>
         }
     </tbody>
@@ -268,4 +281,3 @@
 <p>
     <a asp-controller="Home" asp-action="AllProjects">Back to List</a>
 </p>
-

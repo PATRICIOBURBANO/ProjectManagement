@@ -1,4 +1,5 @@
-﻿@model IEnumerable<ProjectManagement.Models.Project>
+﻿@using ProjectManagementPagination
+@model PaginatedList<ProjectManagement.Models.Project>
 
 @{
     ViewData["Title"] = "Manage All Projects";
@@ -9,17 +10,28 @@
 
 <p>
     <a style="text-decoration:none" asp-controller="Project" asp-action="AddProject">Create a New Project</a>
-  
+
 </p>
 
 <p>
-      <a style="text-decoration:none" asp-controller="UserManager" asp-action="Index">Manage Users</a>
+    <a style="text-decoration:none" asp-controller="UserManager" asp-action="Index">Manage Users</a>
 </p>
 
+
+<form asp-action="AllProjects" method="get">
+    <div class="form-actions no-color">
+        <p>
+            Find by text: <input type="text" name="SearchString" value="@ViewData["CurrentFilter"]" />
+            <input type="submit" value="Search" class="btn btn-primary" />
+            <a asp-action="AllProjects">Back to Full Page List</a>
+        </p>
+    </div>
+</form>
 
 <table class="table">
     <thead>
         <tr>
+
             <th>
                 Title
             </th>
@@ -27,29 +39,37 @@
                 Description Project
             </th>
             <th>
-                Date Start
+                <a asp-action="AllProjects" asp-route-sortOrder="@ViewData["TasksSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Tasks</a>
             </th>
             <th>
-               Deadline
-            </th> 
+                List
+            </th>
+
             <th>
-                 @Html.DisplayNameFor(model => model.Budget)
+                <a asp-action="AllProjects" asp-route-sortOrder="@ViewData["DateSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Date Begin</a>
             </th>
             <th>
-                 Priority
-            </th>   
-            
+                <a asp-action="AllProjects" asp-route-sortOrder="@ViewData["DateSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Date Ends</a>
+            </th>
+
             <th>
-                  Completed
-             </th>
-               
-             <th>
+                <a asp-action="AllProjects" asp-route-sortOrder="@ViewData["BudgetSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Budget</a>
+            </th>
+            <th>
+                <a asp-action="AllProjects" asp-route-sortOrder="@ViewData["PrioritySortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Priority</a>
+            </th>
+
+            <th>
+                <a asp-action="AllProjects" asp-route-sortOrder="@ViewData["CompletedSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Advance</a>
+            </th>
+
+            <th>
                 Actions
             </th>
-             <th>   
-             </th>
-             <th>   
-             </th>
+            <th>
+            </th>
+            <th>
+            </th>
         </tr>
     </thead>
     <tbody>
@@ -63,44 +83,55 @@
                     @Html.DisplayFor(modelItem => item.Content)
                 </td>
                 <td>
-                       @DateOnly.FromDateTime(@item.DateBegin)
-                    
+                    <div style="color : blue">
+                        @Html.DisplayFor(modelItem => item.Tasks.Count)
+                    </div>
+
                 </td>
                 <td>
-                       @DateOnly.FromDateTime(@item.DateEnd)
+                    <a style="text-decoration:none" asp-action="TasksProject" asp-route-projectId="@item.Id">Tasks</a>
                 </td>
                 <td>
-                 $@Html.DisplayFor(modelItem => item.Budget)
+                    @DateOnly.FromDateTime(@item.DateBegin)
+
                 </td>
-                 <td>
+                <td>
+                    @DateOnly.FromDateTime(@item.DateEnd)
+                </td>
+                <td>
+                    $@Html.DisplayFor(modelItem => item.Budget)
+                </td>
+                <td>
                     @if ((int)item.ProjectPriority == 0)
                     {
-                        <div style="color : red" >
+                        <div style="color : red">
                             @Html.DisplayFor(modelItem => item.ProjectPriority)
 
                         </div>
                     }
                     @if ((int)item.ProjectPriority == 1)
                     {
-                        <div style="color : orange" >
+                        <div style="color : orange">
                             @Html.DisplayFor(modelItem => item.ProjectPriority)
 
                         </div>
                     }
                     @if ((int)item.ProjectPriority == 2)
                     {
-                        <div style="color : greenyellow" >
+                        <div style="color : greenyellow">
                             @Html.DisplayFor(modelItem => item.ProjectPriority)
 
                         </div>
                     }
 
                 </td>
+               
                 <td>
-                    @Html.DisplayFor(modelItem =>item.CompletedPercentage)%
+                <td>
+                        @Html.DisplayFor(modelItem =>item.CompletedPercentage)%
 
                 </td>
-                   
+
                 <td>
                     <a style="text-decoration:none" asp-controller="Project" asp-action="UpdateProject" asp-route-Id="@item.Id">Update </a>
                 </td>
@@ -108,7 +139,6 @@
                     <a style="text-decoration:none" asp-controller="Project" asp-action="DeleteProject" asp-route-projectId="@item.Id">Delete</a>
                 </td>
                 <td>
-                    <a style="text-decoration:none" asp-action="TasksProject" asp-route-projectId="@item.Id">Tasks</a>
                 </td>
             </tr>
         }
@@ -120,4 +150,22 @@
 </p>
 
 
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+}
 
+<a asp-action="AllProjects"
+   asp-route-sortOrder="@ViewData["CurrentSort"]"
+   asp-route-pageNumber="@(Model.PageIndex - 1)"
+   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+   class="btn btn-primary @prevDisabled">
+    Previous
+</a>
+<a asp-action="AllProjects"
+   asp-route-sortOrder="@ViewData["CurrentSort"]"
+   asp-route-pageNumber="@(Model.PageIndex + 1)"
+   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+   class="btn btn-primary @nextDisabled">
+    Next
+</a>

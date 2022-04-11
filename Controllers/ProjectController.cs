@@ -322,7 +322,9 @@ namespace ProjectManagement.Controllers
             }
             return RedirectToAction("TasksProject", new { projectId = projectId });
         }
+        
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult IncreaseAdvance(int taskId, int projectId, int valuePercentage)
         {
 
@@ -338,7 +340,7 @@ namespace ProjectManagement.Controllers
 
             _db.SaveChanges();
 
-            return RedirectToAction("TasksProject","Home",new { projectId = projectId });
+            return RedirectToAction("TasksProjectDev","Home",new { projectId = projectId });
         }
 
         [HttpPost]
@@ -362,7 +364,7 @@ namespace ProjectManagement.Controllers
 
             _db.SaveChanges();
 
-            return RedirectToAction("TasksProject", "Home", new { projectId = projectId });
+            return RedirectToAction("TasksProjectDev", "Home", new { projectId = projectId });
         }
 
 

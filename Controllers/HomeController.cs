@@ -30,7 +30,8 @@ namespace ProjectManagement.Controllers
 
         }
 
-        public async Task<IActionResult> Index1(
+        [Authorize(Roles = "Manager")]
+        public async Task<IActionResult> AllProjects(
 
             string sortOrder,
             string currentFilter,
@@ -60,7 +61,7 @@ namespace ProjectManagement.Controllers
             ViewData["CurrentFilter"] = searchString;
 
             var projects = from s in _db.Project.Include(c => c.Tasks)
-                            select s;
+                           select s;
 
             if (!String.IsNullOrEmpty(searchString))
             {
@@ -111,28 +112,23 @@ namespace ProjectManagement.Controllers
         public IActionResult Index()
         {
 
-
-
-
             return View();
         }
 
 
-
         [Authorize(Roles = "Manager")]
-        public IActionResult AllProjects()
+        public async Task<IActionResult> TasksProject(string sortOrder, int projectId)
         {
-            var allProjects = _db.Project.ToList();
-            
+            ViewData["CurrentSort"] = sortOrder;
+            ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewData["DateSortParm"] = sortOrder == "Date" ? "date_desc" : "Date";
+            ViewData["UserSortParm"] = sortOrder == "User" ? "User_desc" : "User";
+            ViewData["PrioritySortParm"] = sortOrder == "Priority" ? "Priority_desc" : "Priority";
+            ViewData["CompletedParm"] = sortOrder == "Completed" ? "Completed_desc" : "Completed";
 
-            return View(allProjects);
-        }
 
-        [Authorize(Roles = "Manager")]
-        public IActionResult TasksProject(int projectId)
-        {
-            //var tasksList = _db.Project.Where(b => b.Id == projectId).Include(c => c.Tasks).ToList();
-            var project = _db.Project.Include(c => c.Tasks).Include(p => p.Notifications).Include(p => p.User).First(p => p.Id == projectId);
+
+            var tasks = _db.Project.Include(c => c.Tasks).Include(p => p.Notifications).Include(p => p.User).First(p => p.Id == projectId);
             var allTasksRelated = _db.Task.Where(a => a.ProjectId == projectId);
             int sumTasks = allTasksRelated.Sum(a => a.CompletedPercentage);
             int averageCompletion = 0;
@@ -140,58 +136,51 @@ namespace ProjectManagement.Controllers
             {
                 averageCompletion = sumTasks / allTasksRelated.Count();
             }
-            
-            project.CompletedPercentage = averageCompletion;
-            project.CreateNotification(project);
+
+            tasks.CompletedPercentage = averageCompletion;
+            tasks.CreateNotification(tasks);
             _db.SaveChanges();
-            return View(project);
+
+            var projects = from s in _db.Task.Where(c => c.ProjectId == projectId)
+                           select s;
+
+
+
+            switch (sortOrder)
+            {
+                case "Date":
+                    projects = projects.OrderBy(s => s.DateBegin);
+                    break;
+                case "date_desc":
+                    projects = projects.OrderByDescending(s => s.DateBegin);
+                    break;
+                case "User_desc":
+                    projects = projects.OrderByDescending(s => s.UserName);
+                    break;
+                case "User":
+                    projects = projects.OrderBy(s => s.UserName);
+                    break;
+                case "Priority_desc":
+                    projects = projects.OrderByDescending(s => s.TaskPriority);
+                    break;
+                case "Priority":
+                    projects = projects.OrderBy(s => s.TaskPriority);
+                    break;
+                case "Completed_desc":
+                    projects = projects.OrderByDescending(s => s.CompletedPercentage);
+                    break;
+                case "Completed":
+                    projects = projects.OrderBy(s => s.CompletedPercentage);
+                    break;
+
+                default:
+                    projects = projects.OrderBy(s => s.DateBegin);
+                    break;
+            }
+            ViewBag.Projects = projects;
+
+            return View(tasks);
         }
-
-
-        [Authorize(Roles = "Manager")]
-        public IActionResult Dashboard()
-        {
-
-            var project = _db.Project.Include(c => c.Tasks);
-            return View(project);
-        }
-
-        public IActionResult GroupedByProject()
-        {
-            var groupedItems = _db.Task.OrderBy(x => x.ProjectId).GroupBy(y => y.ProjectId);
-            return View(groupedItems);
-        }
-        
-
-        //public IActionResult OrderCompletionPriority()
-        //{
-        //    return View();
-        //}
-        //[HttpPost]
-        //public IActionResult OrderCompletionPriority(Priority taskPriority, int? number)
-        //{
-
-        //    var grouped = from s in _db.Task
-        //                  where s. == (int)taskPriority
-        //                  orderby (number == 0) ? s.TaskPriority : s.CompletedPercentage
-        //                  select s;
-        //    var groupedBrand = grouped;
-        //    if (number == 0)
-        //    {
-        //        groupedBrand = grouped.OrderByDescending(x => x.YearMake);
-        //    }
-        //    else
-        //    {
-        //        groupedBrand = grouped.OrderByDescending(x => x.Price);
-        //    }
-        //    ViewBag.Number = number;
-        //    ViewBag.Priority = ;
-        //    ViewBag.Option = (number == 0) ? "Year" : "Price";
-        //    ViewBag.GroupedBrand = groupedBrand;
-
-        //    return View(groupedBrand);
-
-        //}
 
 
 
@@ -220,49 +209,30 @@ namespace ProjectManagement.Controllers
 
             return View(projectsByDev);
         }
-        //public IActionResult AllTasks(string? orderMethod)
-        //{
-        //    ViewBag.OrderOptions = new List<SelectListItem>
-        //    {
-        //        new SelectListItem("Order By Completed", "Completed"),
-        //        new SelectListItem("Order By Priority", "Priority"),
-        //    };
-        //    List<Project> allTasks = _db.Project.Include(r => r.Tasks).ToList();
-        //    if (orderMethod != null)
-        //    {
-
-        //        if (orderMethod == "Completed")
-        //        {
-        //           allTasks = allTasks.OrderBy(c => c.
-        //        }
-        //        else if (orderMethod == "Priority")
-        //        {
-        //            allTasks = _db.Project.Include(c => c.Tasks).ToList();
-        //        }
-
-        //    }
-
-        //    return View(allTasks);
-        //}
 
 
         [Authorize(Roles = "Developer")]
+      
         public IActionResult TasksProjectDev(int projectId)
         {
+
             //var tasksList = _db.Project.Where(b => b.Id == projectId).Include(c => c.Tasks).ToList();
-            var project = _db.Project.Include(c => c.Tasks).ThenInclude(c => c.User).First(p => p.Id == projectId);
-            ViewBag.UserLogged = User.Identity.Name;
+            var project = _db.Project.Include(c => c.Tasks).Include(p => p.Notifications).Include(p => p.User).First(p => p.Id == projectId);
+            var allTasksRelated = _db.Task.Where(a => a.ProjectId == projectId);
+            int sumTasks = allTasksRelated.Sum(a => a.CompletedPercentage);
+            int averageCompletion = 0;
+            if (allTasksRelated.Any())
+            {
+                averageCompletion = sumTasks / allTasksRelated.Count();
+            }
+
+            project.CompletedPercentage = averageCompletion;
+            project.CreateNotification(project);
+            _db.SaveChanges();
             return View(project);
+
         }
-
-        //public IActionResult AllProjectByPriority(string taskPriority)    
-        //{
-        //    var projectsByTag = _db.Project.Where(a => a.Topic == priorityTag).ToList();
-
-        //    return View(projectsByTag);
-        //}
-
-
+       
 
         public IActionResult AllUsers()
         {
