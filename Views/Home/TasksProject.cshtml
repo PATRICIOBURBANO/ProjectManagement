@@ -11,7 +11,7 @@
 {
     <h4>Notifications</h4>
     
-    <a class="btn btn-primary" style="text-decoration:none; border:thick; color: yellow" asp-controller="Notification" asp-action="Details" asp-route-projectId="@Model.Id">You have @Model.Notifications.Count(n => n.Status == false) unopened notifications</a>
+    <a class="btn btn-primary" style="text-decoration:none; border:thick; color: yellow" asp-controller="Notification" asp-action="Details" asp-route-projectId="@Model.Id">You have @Model.Notifications.Count(n => n.Status == true)  notifications and @Model.Notifications.Count(n => n.Status == false) unopened</a>
 }
 <h5>Project</h5>
 <p>
@@ -24,14 +24,8 @@
 
 </p>
 
-<form asp-action="TasksProject" method="get">
-    <select name="sort" asp-items="ViewBag.OrderOptions"></select>
-    <button type="submit">Sort</button>
 
-</form>
-<p>
-    <a class="btn btn-primary" asp-controller="Project" asp-action="AddTask" asp-route-projectId="@Model.Id">Add New Task to Project</a>
-</p>
+
 <table class="table">
     <thead>
         <tr>
@@ -57,11 +51,7 @@
             <th>
                  <a asp-action="TasksProject" asp-route-sortOrder="@ViewData["PrioritySortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]" asp-route-projectId="@Model.Id">Priority</a>
             </th>   
-            <th>
-                Enter %
-                Advance
-
-            </th>
+          
             <th>
                 Status
             </th>
@@ -191,31 +181,7 @@
                         }
                     }
                     </td>
-                    <td>
-                    @if (item.CompletedPercentage < 100)
-                    {
                    
-
-                        <form asp-action="IncreaseAdvance" 
-                      asp-controller="Project"
-                      name="projectId"
-                      asp-route-projectId="@Model.Id"
-                      asp-route-taskId="@item.Id"
-                      method="post">
-                            <input type="number" name="valuePercentage" maxlength="18" min="1" max="100" />
-                            <button  type="submit">Apply</button>
-                        </form>
-                   
-                    }
-                    else
-                    {
-                    <p> </p>
-                    }
-                     </td>
-
-
-
-
                      <td>
                         @if (@item.IsFinished)
                         {
@@ -245,20 +211,7 @@
                     </td>
 
 
-                    <td>
-                    @if (item.CompletedPercentage == 100  && @item.Comment == null)
-                    {<form asp-action="EnterComment"
-                      asp-controller="Project"
-                      name="taskId"
-                      asp-route-projectId="@Model.Id"
-                      asp-route-taskId="@item.Id"
-                      method="post">
-                            <input type="text" name="finalComment" class="form-control" />
-                            <button type="submit">Comment</button>
-                        </form>
-                  
-                    }
-                      </td>
+                   
    
             </tr>
         }

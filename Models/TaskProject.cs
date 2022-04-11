@@ -16,6 +16,7 @@
         public bool IsFinished { get; set; } = false;
         public int CompletedPercentage { get; set; }
         public string? Comment { get; set; }
+        public int? CostExecutedTask { get; set; } =null;
 
         public Priority TaskPriority { get; set; }
     }

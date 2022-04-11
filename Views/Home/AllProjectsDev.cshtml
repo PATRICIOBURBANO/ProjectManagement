@@ -77,7 +77,7 @@
                 </td>
                
                 <td>
-                    <a style="text-decoration:none" asp-action="TasksProjectDev" asp-route-projectId="@item.Id">Tasks List</a>
+                    <a style="text-decoration:none" asp-action="TasksProjectDev" asp-route-projectId="@item.Id"  asp-route-userName="@ViewBag.UserLogged">Tasks List</a>
                 </td>
             </tr>
         }

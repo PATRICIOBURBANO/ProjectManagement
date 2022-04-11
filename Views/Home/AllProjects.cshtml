@@ -23,7 +23,7 @@
         <p>
             Find by text: <input type="text" name="SearchString" value="@ViewData["CurrentFilter"]" />
             <input type="submit" value="Search" class="btn btn-primary" />
-            <a asp-action="AllProjects">Back to Full Page List</a>
+           
         </p>
     </div>
 </form>
@@ -56,9 +56,13 @@
                 <a asp-action="AllProjects" asp-route-sortOrder="@ViewData["BudgetSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Budget</a>
             </th>
             <th>
+                Executed $
+            </th>
+            <th>
                 <a asp-action="AllProjects" asp-route-sortOrder="@ViewData["PrioritySortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Priority</a>
             </th>
-
+            <th>
+            </th>
             <th>
                 <a asp-action="AllProjects" asp-route-sortOrder="@ViewData["CompletedSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Advance</a>
             </th>
@@ -101,6 +105,21 @@
                 <td>
                     $@Html.DisplayFor(modelItem => item.Budget)
                 </td>
+                <td>@if((item.CostExecuted > item.Budget))
+                        {
+                            <p>
+                                 $@item.CostExecuted
+
+                            </p>
+                            <div style="color: red">
+                                Over Budget
+                            </div>
+                        }
+                        else
+                        {
+                             @item.CostExecuted
+                        }
+                </td>
                 <td>
                     @if ((int)item.ProjectPriority == 0)
                     {
@@ -128,7 +147,21 @@
                
                 <td>
                 <td>
-                        @Html.DisplayFor(modelItem =>item.CompletedPercentage)%
+                    @if((item.CompletedPercentage == 100))
+                        {
+                            <p>
+                                 @Html.DisplayFor(modelItem =>item.CompletedPercentage)%
+
+                            </p>
+                            <div style="color: red">
+                                Completed
+                            </div>
+                        }
+                        else
+                        {
+                             @item.CompletedPercentage
+                        }
+
 
                 </td>
 

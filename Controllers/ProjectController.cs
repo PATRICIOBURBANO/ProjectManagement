@@ -164,17 +164,8 @@ namespace ProjectManagement.Controllers
             ViewBag.ProjectId = projectId;
             var developers = _db.Users.ToList();
             ViewBag.SelectList = new SelectList(developers, "Id", "UserName");
-            var allTasksRelated = _db.Task.Where(a => a.ProjectId == projectId);
-            int sumTasks = allTasksRelated.Sum(a => a.CompletedPercentage);
-            int averageCompletion = 0;
-            Project project = _db.Project.FirstOrDefault(a => a.Id == projectId);
-            if (allTasksRelated.Any())
-            {
-                averageCompletion = sumTasks / allTasksRelated.Count();
-            }
+            
 
-            project.CompletedPercentage= averageCompletion;
-           
             _db.SaveChanges();
             return View();
         }
@@ -329,6 +320,10 @@ namespace ProjectManagement.Controllers
         {
 
             TaskProject taskSelected = _db.Task.First(a => a.Id == taskId);
+            
+
+            string userLogged = User.Identity.Name;
+           
         
 
             taskSelected.CompletedPercentage = valuePercentage;
@@ -339,7 +334,7 @@ namespace ProjectManagement.Controllers
         
 
             _db.SaveChanges();
-
+           
             return RedirectToAction("TasksProjectDev","Home",new { projectId = projectId });
         }
 

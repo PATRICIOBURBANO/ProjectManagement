@@ -9,14 +9,15 @@
         public float Budget { get; set; }
         public DateTime DateBegin { get; set; }
         public DateTime DateEnd { get; set; }
-        public string UserId { get; set; }
-        public string UserName { get; set; }
-        public virtual ApplicationUser User { get; set; } = null!;
+        public string? UserId { get; set; }
+        public string? UserName { get; set; }
+        public virtual ApplicationUser User { get; set; } 
         public bool IsFinished { get; set; } = false;
         public virtual ICollection<TaskProject> Tasks { get; set; }
         public virtual ICollection<Notification> Notifications { get; set; }
         public PriorityP ProjectPriority { get; set; }
-
+        public int? CostExecuted { get; set; } = null;
+         
         public Project()
         {
             Tasks = new HashSet<TaskProject>();

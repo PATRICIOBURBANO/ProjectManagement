@@ -44,7 +44,7 @@ namespace ProjectManagement.Controllers
             ViewData["TasksSortParm"] = sortOrder == "Task" ? "Task_desc" : "Task";
             ViewData["BudgetSortParm"] = sortOrder == "Budget" ? "Budget_desc" : "Budget";
             ViewData["PrioritySortParm"] = sortOrder == "Priority" ? "Priority_desc" : "Priority";
-            ViewData["CompletedParm"] = sortOrder == "Completed" ? "Completed_desc" : "Completed";
+            ViewData["CompletedSortParm"] = sortOrder == "Completed" ? "Completed_desc" : "Completed";
 
 
 
@@ -66,7 +66,7 @@ namespace ProjectManagement.Controllers
             if (!String.IsNullOrEmpty(searchString))
             {
                 projects = _db.Project.Include(c => c.Tasks).Where(s => s.Name.Contains(searchString) || s.Content.Contains(searchString));
-            }
+            }   
             switch (sortOrder)
             {
                 case "Date":
@@ -117,14 +117,14 @@ namespace ProjectManagement.Controllers
 
 
         [Authorize(Roles = "Manager")]
-        public async Task<IActionResult> TasksProject(string sortOrder, int projectId)
+        public async Task<IActionResult> TasksProject(int projectId)
         {
-            ViewData["CurrentSort"] = sortOrder;
-            ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
-            ViewData["DateSortParm"] = sortOrder == "Date" ? "date_desc" : "Date";
-            ViewData["UserSortParm"] = sortOrder == "User" ? "User_desc" : "User";
-            ViewData["PrioritySortParm"] = sortOrder == "Priority" ? "Priority_desc" : "Priority";
-            ViewData["CompletedParm"] = sortOrder == "Completed" ? "Completed_desc" : "Completed";
+            //ViewData["CurrentSort"] = sortOrder;
+            //ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            //ViewData["DateSortParm"] = sortOrder == "Date" ? "date_desc" : "Date";
+            //ViewData["UserSortParm"] = sortOrder == "User" ? "User_desc" : "User";
+            //ViewData["PrioritySortParm"] = sortOrder == "Priority" ? "Priority_desc" : "Priority";
+            //ViewData["CompletedParm"] = sortOrder == "Completed" ? "Completed_desc" : "Completed";
 
 
 
@@ -136,8 +136,23 @@ namespace ProjectManagement.Controllers
             {
                 averageCompletion = sumTasks / allTasksRelated.Count();
             }
+            Project project = _db.Project.FirstOrDefault(a => a.Id == projectId);
+            if (allTasksRelated.Any())
+            {
+                averageCompletion = sumTasks / allTasksRelated.Count();
+            }
+            ApplicationUser user = _db.ApplicationUser.First(a => a.UserName == tasks.UserName);
+            ApplicationUser manager = _db.ApplicationUser.First(a => a.UserName == "admin1@mitt.ca");
 
+            project.CompletedPercentage = averageCompletion;
+            if (project.CompletedPercentage == 100)
+            {
+                project.DateEnd = DateTime.Now;
+                project.CostExecuted = ((user.PayDay) * (project.DateEnd - project.DateBegin).Days) + manager.PayDay;
+            }
+           
             tasks.CompletedPercentage = averageCompletion;
+            tasks.IsFinished= true;
             tasks.CreateNotification(tasks);
             _db.SaveChanges();
 
@@ -146,37 +161,39 @@ namespace ProjectManagement.Controllers
 
 
 
-            switch (sortOrder)
-            {
-                case "Date":
-                    projects = projects.OrderBy(s => s.DateBegin);
-                    break;
-                case "date_desc":
-                    projects = projects.OrderByDescending(s => s.DateBegin);
-                    break;
-                case "User_desc":
-                    projects = projects.OrderByDescending(s => s.UserName);
-                    break;
-                case "User":
-                    projects = projects.OrderBy(s => s.UserName);
-                    break;
-                case "Priority_desc":
-                    projects = projects.OrderByDescending(s => s.TaskPriority);
-                    break;
-                case "Priority":
-                    projects = projects.OrderBy(s => s.TaskPriority);
-                    break;
-                case "Completed_desc":
-                    projects = projects.OrderByDescending(s => s.CompletedPercentage);
-                    break;
-                case "Completed":
-                    projects = projects.OrderBy(s => s.CompletedPercentage);
-                    break;
+            //switch (sortOrder)
+            //{
+            //    case "Date":
+            //        projects = projects.OrderBy(s => s.DateBegin);
+            //        break;
+            //    case "date_desc":
+            //        projects = projects.OrderByDescending(s => s.DateBegin);
+            //        break;
+            //    case "User_desc":
+            //        projects = projects.OrderByDescending(s => s.UserName);
+            //        break;
+            //    case "User":
+            //        projects = projects.OrderBy(s => s.UserName);
+            //        break;
+            //    case "Priority_desc":
+            //        projects = projects.OrderByDescending(s => s.TaskPriority);
+            //        break;
+            //    case "Priority":
+            //        projects = projects.OrderBy(s => s.TaskPriority);
+            //        break;
+            //    case "Completed_desc":
+            //        projects = projects.OrderByDescending(s => s.CompletedPercentage);
+            //        break;
+            //    case "Completed":
+            //        projects = projects.OrderBy(s => s.CompletedPercentage);
+            //        break;
 
-                default:
-                    projects = projects.OrderBy(s => s.DateBegin);
-                    break;
-            }
+            //    default:
+            //        projects = projects.OrderBy(s => s.DateBegin);
+            //        break;
+            //}
+
+
             ViewBag.Projects = projects;
 
             return View(tasks);
@@ -207,15 +224,15 @@ namespace ProjectManagement.Controllers
                 }
             }
 
+            ViewBag.UserLogged2 = User.Identity.Name;
             return View(projectsByDev);
         }
 
 
         [Authorize(Roles = "Developer")]
-      
-        public IActionResult TasksProjectDev(int projectId)
+        public IActionResult TasksProjectDev(int projectId, string userName)
         {
-
+            userName = ViewBag.UserLogged2;
             //var tasksList = _db.Project.Where(b => b.Id == projectId).Include(c => c.Tasks).ToList();
             var project = _db.Project.Include(c => c.Tasks).Include(p => p.Notifications).Include(p => p.User).First(p => p.Id == projectId);
             var allTasksRelated = _db.Task.Where(a => a.ProjectId == projectId);
@@ -227,7 +244,9 @@ namespace ProjectManagement.Controllers
             }
 
             project.CompletedPercentage = averageCompletion;
+            
             project.CreateNotification(project);
+            ViewBag.UserLogged = User.Identity.Name;
             _db.SaveChanges();
             return View(project);
 
