@@ -6,7 +6,10 @@
 
 <h1>Manage all Projects by Developer</h1>
 
-
+@if(@ViewBag.NumNoti > 0)
+{
+    <a class="btn btn-primary" style="text-decoration:none; border:thick; color: yellow" asp-controller="Notification" asp-action="Details">You have @ViewBag.NumNoti unopened notifications</a>
+}
 
 <table class="table">
     <thead>

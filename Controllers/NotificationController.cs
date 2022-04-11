@@ -27,12 +27,26 @@ namespace ProjectManagement.Controllers
         }
 
         // GET: NotificationController/Details/5
-        public IActionResult Details(int projectId)
+        public IActionResult Details(int? projectId)
         {
-            List<Notification> notification = _db.Notification.Include(n => n.Project).Include(n => n.User).Where(n => n.ProjectId == projectId).ToList();
-            foreach(var noti in notification)
+            List<Notification> notification = new List<Notification>();
+            if(projectId != null)
             {
-                noti.Status = true;
+                notification = _db.Notification.Include(n => n.Project).Include(n => n.User).Where(n => n.ProjectId == projectId).ToList();
+                foreach(var noti in notification)
+                {
+                    noti.Status = true;
+                }
+            }
+            else
+            {
+                string userName = User.Identity.Name;
+
+                notification = _db.Notification.Include(n => n.Project).Include(n => n.Task).ThenInclude(u => u.User).Where(n => n.Task.UserName == userName).ToList();
+                foreach (var noti in notification)
+                {
+                    noti.Status = true;
+                }
             }
             _db.SaveChanges();
             return View(notification);

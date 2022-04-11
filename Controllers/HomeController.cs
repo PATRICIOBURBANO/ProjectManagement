@@ -198,10 +198,10 @@ namespace ProjectManagement.Controllers
 
 
         [Authorize(Roles = "Developer")]
-        public IActionResult AllProjectsDev()
+        public async Task<IActionResult> AllProjectsDev()
         {
 
-            //string userName = User.Identity.Name;
+            string userName = User.Identity.Name;
 
             //Project project = _db.Project.First();
             //var projectUser = project.UserName;
@@ -210,14 +210,21 @@ namespace ProjectManagement.Controllers
 
             List<Project> projectsByDev = new List<Project>();
 
-            foreach(var project in _db.Project.Include(p => p.Tasks).ThenInclude(t => t.User))
+            int numNotification = 0;
+
+
+            foreach(var project in _db.Project.Include(p => p.Notifications).Include(p => p.Tasks).ThenInclude(t => t.User))
             {
                 if(project.Tasks.Any(p => p.UserName == User.Identity.Name))
                 {
                     projectsByDev.Add(project);
+                    project.CreateNotification(project);
+                    numNotification += project.Notifications.Count(n => n.Status == false && (n.Task != null && n.Task.UserName == userName));
                 }
             }
+            await _db.SaveChangesAsync();
 
+            ViewBag.NumNoti = numNotification;
             return View(projectsByDev);
         }
         //public IActionResult AllTasks(string? orderMethod)
@@ -251,6 +258,8 @@ namespace ProjectManagement.Controllers
         {
             //var tasksList = _db.Project.Where(b => b.Id == projectId).Include(c => c.Tasks).ToList();
             var project = _db.Project.Include(c => c.Tasks).ThenInclude(c => c.User).First(p => p.Id == projectId);
+            //project.CreateNotification(project);
+
             ViewBag.UserLogged = User.Identity.Name;
             return View(project);
         }

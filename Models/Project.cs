@@ -63,6 +63,20 @@
                     }
                 }
             }
+
+            if(project.Tasks.Any(p => p.DateEnd.AddDays(-1).Date == now.Date)) /*- will get a notification when the task is only one day to pass the deadline*/
+            {
+                List<TaskProject> taskProject = project.Tasks.Where(p => p.DateEnd.AddDays(-1).Date == now.Date).ToList();
+                foreach(var task in taskProject)
+                {
+                    if (!project.Notifications.Any(n => n.Task != null && n.TaskId == task.Id && n.UserId == task.UserId))
+                    {
+                        string contentNotification = $"Task: {task.Title} is only one day to pass the deadline";
+                        Notification notification = new Notification(project, contentNotification, task);
+                        project.Notifications.Add(notification);
+                    }
+                }
+            }
         }
     }
     public enum PriorityP
